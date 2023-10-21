@@ -1,0 +1,45 @@
+{% extends 'layouts/inicio.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}
+Inicio
+{% endblock title %}
+
+{% block content %}
+{% if messages %}
+<div class="card border-danger text-danger">
+      <div>
+          {% for message in messages %}
+              <div class="alert alert-{{message.tags}}">
+                  {{message}}
+              </div>
+          {% endfor %}   
+      </div>
+</div>
+{% endif %}
+<br>
+{% for evento in eventos %}
+<div class="d-flex">
+    <div class="card">
+        <div class="card-header text-white px-4 py-3 bg-color-fourth font-size-1">
+          {{ evento.nombre }}
+        </div>
+        <div class="card-body">
+          <p class="card-text">{{ evento.lugar }}</p>
+          <p class="card-text">{{ evento.fecha_inicio }}</p>
+          <p class="card-text">Fecha Fin: {{ evento.fecha_fin }}</p>
+          <a href="{% url 'empleado:evento' idEvento=evento.id %}" class="btn btn-primary">Ver más</a>
+        </div>
+    </div>
+</div>
+{% empty %}
+<div class="d-flex">
+  <div class="card">
+      <div class="card-header text-white px-4 py-3 bg-color-fourth font-size-1">
+        <p>No hay eventos disponibles para mostrar.</p>
+      </div>
+  </div>
+</div>
+{% endfor %}
+{% endblock content %}

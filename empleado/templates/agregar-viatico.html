@@ -1,0 +1,18 @@
+{% extends 'layouts/inicio.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}
+{{evento.nombre}}
+{% endblock title %}
+
+{% block content %}
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <h1 class="h3 fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Ingresa a el viatico</h1>
+    {{form|crispy}}
+    <div class="pt-1 mb-4">
+      <input id="agregar-viatico" type="submit" value="Guardar" class="btn btn-dark btn-lg btn-block">
+    </div>
+  </form>
+{% endblock content %}
