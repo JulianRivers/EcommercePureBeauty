@@ -8,6 +8,7 @@
 #Django
 migrations
 __pycache__
+db.sqlite3
 
 # Compiled output
 /dist
