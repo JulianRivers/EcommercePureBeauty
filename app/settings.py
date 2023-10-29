@@ -44,8 +44,6 @@ INSTALLED_APPS = [
     'crispy_forms',
     
     #Mis app
-    'prodcuto',
-    'empleado',
     'producto',
     'pedido',
     'usuario',
@@ -145,9 +143,9 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = "gerente.UserProfile"
+AUTH_USER_MODEL = "usuario.UserProfile"
 
-MEDIA_URL = '/viaticos/'
+MEDIA_URL = '/productos/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, '')
 
