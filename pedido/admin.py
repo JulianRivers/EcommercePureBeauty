@@ -1,3 +1,9 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import (DetallePedido, EstadoPedido, MetodoPago, Pedido)
+
+admin.site.register(DetallePedido)
+admin.site.register(EstadoPedido)
+admin.site.register(MetodoPago)
+admin.site.register(Pedido)
+
