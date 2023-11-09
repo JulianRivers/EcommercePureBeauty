@@ -27,9 +27,18 @@ class Categoria(models.Model):
     nombre = models.CharField('Nombre', max_length=100)
     categoria_padre = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='categorias_hijas')
 
+
     def __str__(self):
         '''Representación en un String de la Categoria'''
-        return self.nombre
+        return self.get_nombre_completo()
+
+    def get_nombre_completo(self):
+        if self.categoria_padre:
+            # Si tiene una categoría padre, llamamos recursivamente al método get_nombre_completo
+            return f"{self.categoria_padre.get_nombre_completo()} > {self.nombre}"
+        else:
+            # Si no tiene una categoría padre, retorna solo el nombre
+            return self.nombre
 
 
 class Subcategoria(models.Model):
@@ -39,7 +48,8 @@ class Subcategoria(models.Model):
 
     def __str__(self):
         '''Representación en un String de la subcategoria'''
-        return self.nombre
+        return f"{self.categoria} > {self.nombre}"
+    
 
 
 class ProductoSubcategoria(models.Model):
