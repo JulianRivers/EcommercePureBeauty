@@ -52,3 +52,30 @@ html, body {
 .fab:hover {
     color: #1d2124;
 }
+
+/* Estilos para el fondo oscuro detrás del modal */
+.modal-background {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Fondo oscuro con opacidad */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Estilos para el modal */
+.modal {
+    display: none;
+    background-color: #fff;
+    width: 50%; /* Ancho del modal */
+    max-width: 400px; /* Ancho máximo del modal */
+    max-height: 400px; /* Ancho máximo del modal */
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    margin: auto;
+}
