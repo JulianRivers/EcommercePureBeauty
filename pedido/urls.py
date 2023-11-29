@@ -5,5 +5,5 @@ from . import views
 
 app_name="pedido"
 urlpatterns = [
-    path('/ordenes',views.index, name='ordenes'),
+    path('ordenes',views.index, name='ordenes'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

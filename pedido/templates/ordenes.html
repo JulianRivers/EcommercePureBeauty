@@ -1,0 +1,65 @@
+{% extends 'dashboard.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="color-box" style="background-color: #7386D5;">
+                <div class="text-center">
+                    <p style="color: aliceblue;">Ordenes pendientes</p>
+                    <p style="color: aliceblue;">0</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="color-box bg-success">
+                <div class="text-center">
+                    <p style="color: aliceblue;">Ordenes en espera</p>
+                    <p style="color: aliceblue;">0</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="color-box bg-danger">
+                <div class="text-center">
+                    <p style="color: aliceblue;">Ventas</p>
+                    <p style="color: aliceblue;">0</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<table class="table">
+    <thead style="background-color: #7386D5;">
+        <tr>
+            <th scope="col" style="color:aliceblue;">#</th>
+            <th scope="col" style="color:aliceblue;">First</th>
+            <th scope="col" style="color:aliceblue;">Last</th>
+            <th scope="col" style="color:aliceblue;">Handle</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th scope="row">1</th>
+            <td>Mark</td>
+            <td>Otto</td>
+            <td>@mdo</td>
+        </tr>
+        <tr>
+            <th scope="row">2</th>
+            <td>Jacob</td>
+            <td>Thornton</td>
+            <td>@fat</td>
+        </tr>
+        <tr>
+            <th scope="row">3</th>
+            <td>Larry</td>
+            <td>the Bird</td>
+            <td>@twitter</td>
+        </tr>
+    </tbody>
+</table>
+{% endblock content %}

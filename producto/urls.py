@@ -5,6 +5,6 @@ from . import views
 
 app_name="producto"
 urlpatterns = [
-    path('/productos',views.index, name='inicio'),
-    path('/categorias',views.index, name='categorias'),
+    path('productos',views.inicio, name='inicio'),
+    path('categorias',views.index, name='categorias'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
