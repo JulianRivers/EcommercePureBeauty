@@ -3,7 +3,17 @@
 {% load static %}
 
 {% block content %}
-<h1>Listado de productos</h1>
+<div class="container">
+    <div class="row">
+        <div class="col-8">
+            <h1>Listado de productos</h1>
+        </div>
+        <div class="col-4 text-right">
+            <button class="btn btn-outline-dark" onclick="abrirModal()">Agregar producto</button>
+        </div>
+    </div>
+    
+</div>
 <table class="table">
     <thead style="background-color: #7386D5;">
         <tr>
@@ -22,13 +32,81 @@
             <th scope="row">{{ forloop.counter }}</th>
             <td>{{ producto.nombre }}</td>
             <td>{{ producto.stock }}</td>
-            <td>{{ producto.precio_desc }}</td>
-            <td>{{ producto.categoria }}</td>
+            <td>
+                <a href="#">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-6">
+                                {{ producto.precio_desc }}✎
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </td>
+            <td><a href="#">{{ producto.categoria }}</a></td>
             <td>{{ producto.precio_act }}</td>
-            <td> </td>
+            <td>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-4">
+                            <button class="btn btn-outline-dark btn-block">🗑</button>
+                        </div>
+                        <div class="col-4">
+                            <button class="btn btn-outline-dark btn-block">👁</button>
+                        </div>
+                        <div class="col-4">
+                            <button class="btn btn-outline-dark btn-block">✎</button>
+                        </div>
+                    </div>
+                </div>
+            </td>
         </tr>
-        {% endfor %}    
+        {% endfor %}
     </tbody>
 </table>
-{% endblock content %}
+<nav aria-label="Page navigation example">
+    <ul class="pagination">
+      <li class="page-item">
+        <a class="page-link" style="color: black;" href="#" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+          <span class="sr-only">Previous</span>
+        </a>
+      </li>
+      <li class="page-item"><a class="page-link" style="color: black;" href="#">1</a></li>
+      <li class="page-item"><a class="page-link"  style="color: black;" href="#">2</a></li>
+      <li class="page-item"><a class="page-link"  style="color: black;" href="#">3</a></li>
+      <li class="page-item">
+        <a class="page-link"  style="color: black;" href="#" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+          <span class="sr-only">Next</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+<!-- MODALES -->
+<div class="modal-background" id="addProductoBg">
+    <!-- Contenido del modal -->
+    <div class="modal" id="addProducto">
+        <h2>Agregar Producto</h2>
+        <p><input type="text"></p>
+        <button onclick="cerrarModal()">Cerrar</button>
+    </div>
+</div>
 
+<!-- Fin Modales -->
+
+<script>
+    function abrirModal() {
+        // Mostrar el fondo oscuro y el modal
+        document.getElementById("addProductoBg").style.display = "flex";
+        document.getElementById("addProducto").style.display = "block";
+    }
+
+    function cerrarModal() {
+        // Ocultar el fondo oscuro y el modal
+        document.getElementById("addProductoBg").style.display = "none";
+        document.getElementById("addProducto").style.display = "none";
+    }
+    cerrarModal()
+</script>
+{% endblock content %}

@@ -15,9 +15,8 @@ def inicio(request):
         if producto.precio_desc == producto.precio_act:
             producto.precio_desc = 0
         
-        relaciones = ProductoSubcategoria.objects.get(producto=producto)
-        
-        producto.nuevo =relaciones.subcategoria
+        productoSubcategoria = ProductoSubcategoria.objects.get(producto=producto)
+        producto.categoria =productoSubcategoria.subcategoria
         pass
 
     return render(request, 'productos.html', {'productos': productos})
