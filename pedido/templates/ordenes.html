@@ -2,64 +2,94 @@
 {% load crispy_forms_tags %}
 {% load static %}
 
-
 {% block content %}
-<div class="container mt-4">
-    <div class="row">
-        <div class="col-md-4">
-            <div class="color-box" style="background-color: #7386D5;">
-                <div class="text-center">
-                    <p style="color: aliceblue;">Ordenes pendientes</p>
-                    <p style="color: aliceblue;">0</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="color-box bg-success">
-                <div class="text-center">
-                    <p style="color: aliceblue;">Ordenes en espera</p>
-                    <p style="color: aliceblue;">0</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="color-box bg-danger">
-                <div class="text-center">
-                    <p style="color: aliceblue;">Ventas</p>
-                    <p style="color: aliceblue;">0</p>
-                </div>
-            </div>
-        </div>
+<div class="container">
+    <div class="col-8">
+        <h1>Listado de Ordenes</h1>
     </div>
 </div>
 <table class="table">
+    <!-- Encabezados de la tabla -->
     <thead style="background-color: #7386D5;">
         <tr>
             <th scope="col" style="color:aliceblue;">#</th>
-            <th scope="col" style="color:aliceblue;">First</th>
-            <th scope="col" style="color:aliceblue;">Last</th>
-            <th scope="col" style="color:aliceblue;">Handle</th>
+            <th scope="col" style="color:aliceblue;">Fecha de la orden</th>
+            <th scope="col" style="color:aliceblue;">Fecha de envio</th>
+            <th scope="col" style="color:aliceblue;">Estado</th>
+            <th scope="col" style="color:aliceblue;">Precio</th>
+            <th scope="col" style="color:aliceblue;">Acción</th>
         </tr>
     </thead>
     <tbody>
+        {% for orden in ordenes %}
         <tr>
-            <th scope="row">1</th>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
+            <th scope="row">{{ orden.id }}</th>
+            <td>{{ orden.fecha|date:"d/m/Y" }}</td>
+            <td>{{ orden.fecha_de_envio|date:"d/m/Y" }}</td>
+            <td>{{ orden.estado_pedido }}</td>
+            <td>{{ orden.total_compra }}</td>
+            <td>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-2">
+                            <button class="btn btn-block" onclick="abrirModalEditar('{{ orden.id }}')">✎</button>
+                        </div>
+                    </div>
+                </div>
+            </td>
         </tr>
-        <tr>
-            <th scope="row">2</th>
-            <td>Jacob</td>
-            <td>Thornton</td>
-            <td>@fat</td>
-        </tr>
-        <tr>
-            <th scope="row">3</th>
-            <td>Larry</td>
-            <td>the Bird</td>
-            <td>@twitter</td>
-        </tr>
+        {% endfor %}
     </tbody>
 </table>
+<!-- MODALES -->
+<div class="modal-background" id="editarOrdenModalBg" style="display: none;">
+    <div class="modal" id="editarOrdenModal">
+        <h2>Editar Orden</h2>
+        <form id="editarOrdenForm" method="POST">
+            {% csrf_token %}
+            <label for="fechaEnvioInput">Fecha de Envío:</label>
+            <input type="date" id="fechaEnvioInput" name="fecha_envio">
+            
+            <label for="estadoPedidoInput">Estado de Pedido:</label>
+            <select id="estadoPedidoInput" name="estado_pedido">
+                {% for estado_pedido in estados_pedidos %}
+                    <option value="{{ estado_pedido.id }}">{{ estado_pedido.nombre }}</option>
+                {% endfor %}
+            </select>
+            
+            <button type="submit">Guardar cambios</button>
+        </form>
+        <button onclick="cerrarModalEditar()">Cerrar</button>
+    </div>
+</div>
+<!-- Fin Modales -->
+
+<script>
+    function abrirModalEditar(id) {
+        fetch(`/obtener_orden/${id}/`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('fechaEnvioInput').value = data.fecha_de_envio;
+                document.getElementById('estadoPedidoInput').value = data.estado_pedido;
+                // Asegúrate de ajustar otros campos si los hay
+                document.getElementById('editarOrdenForm').setAttribute('action', `/actualizar_orden/${id}/`);
+                
+                const modal = document.getElementById("editarOrdenModalBg");
+                const modalContent = document.getElementById("editarOrdenModal");
+                modal.style.display = "flex";
+                modalContent.style.display = "block";
+            })
+            .catch(error => {
+                console.error('Error al obtener los datos de la orden:', error);
+            });
+    }
+
+    function cerrarModalEditar() {
+        const modal = document.getElementById("editarOrdenModalBg");
+        const modalContent = document.getElementById("editarOrdenModal");
+
+        modal.style.display = "none";
+        modalContent.style.display = "none";
+    }
+</script>
 {% endblock content %}
