@@ -28,6 +28,7 @@ class Pedido(models.Model):
 
     direccion_entrega = models.CharField('Dirección de entrega', max_length=500)
     fecha = models.DateTimeField('Fecha del pedido')
+    fecha_de_envio = models.DateTimeField('Fecha de envío', null=True, blank=True)
     total_compra = models.DecimalField('Precio total de la compra', max_digits=15, decimal_places=2)
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, verbose_name='Usuario')
     metodo = models.ForeignKey(MetodoPago, on_delete=models.CASCADE, verbose_name='Método de pago')
