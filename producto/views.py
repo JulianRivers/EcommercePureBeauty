@@ -14,9 +14,10 @@ def inicio(request):
     for producto in productos:
         if producto.precio_desc == producto.precio_act:
             producto.precio_desc = 0
-        
-        productoSubcategoria = ProductoSubcategoria.objects.get(producto=producto)
-        producto.categoria =productoSubcategoria.subcategoria
-        pass
+        try:
+            productoSubcategoria = ProductoSubcategoria.objects.get(producto=producto)
+            producto.categoria = productoSubcategoria.subcategoria
+        except ProductoSubcategoria.DoesNotExist:
+            producto.categoria = 'Sin categoría'
 
     return render(request, 'productos.html', {'productos': productos})
