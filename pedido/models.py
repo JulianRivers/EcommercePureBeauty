@@ -41,7 +41,7 @@ class Pedido(models.Model):
 
 class DetallePedido(models.Model):
     '''Modelo para persistir el histórico de los productos'''
-    pedido = models.ForeignKey(MetodoPago, on_delete=models.CASCADE, verbose_name='Pedido')
+    pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE, verbose_name='Pedido')
     producto = models.ForeignKey(Producto, on_delete=models.CASCADE, verbose_name='Producto')
     precio_producto = models.DecimalField('Precio del Producto', max_digits=15, decimal_places=2)
     cantidad = models.PositiveIntegerField('Cantidad')

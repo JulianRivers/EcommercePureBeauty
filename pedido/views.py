@@ -20,14 +20,12 @@ def lista_ordenes(request):
 
 def obtener_orden(request, orden_id):
     orden = get_object_or_404(Pedido, id=orden_id)
-    detalles_pedido = DetallePedido.objects.filter(pedido=orden)
     
     data = {
         'id': orden.id,
         'fecha_de_envio': orden.fecha_de_envio.strftime('%Y-%m-%d') if orden.fecha_de_envio else None,
         'estado_pedido': orden.estado_pedido.nombre if orden.estado_pedido else None,
         # Otros campos simples aquí...
-        'detalles_pedido': list(detalles_pedido.values())  # Agrega los detalles del pedido como una lista de diccionarios
     }
     
     return JsonResponse(data)
@@ -51,6 +49,37 @@ def actualizar_orden(request, orden_id):
 
     return JsonResponse({'mensaje': 'Error al actualizar la orden'})
 
+
+def obtener_detalles_pedido(request, orden_id):
+    orden = get_object_or_404(Pedido, id=orden_id)
+    detalles_pedido = DetallePedido.objects.filter(pedido=orden)
+    
+    detalles = []
+    for detalle in detalles_pedido:
+        detalles.append({
+            'producto_nombre': detalle.producto.nombre,
+            'cantidad': detalle.cantidad,
+            'precio_producto': detalle.precio_producto,
+            'imagen_url': detalle.producto.imagen.url if detalle.producto.imagen else None,
+            # Agrega más campos del detalle si es necesario
+        })
+
+    detalles_usuario = {
+        'nombre': orden.usuario.name,
+        'correo': orden.usuario.email,
+        'direccion': orden.usuario.direccion,
+        'pais': orden.usuario.ciudad.departamento.departamento.nombre if orden.usuario.ciudad else None,
+        'ciudad': orden.usuario.ciudad.nombre if orden.usuario.ciudad else None,
+        'departamento': orden.usuario.ciudad.departamento.nombre if orden.usuario.ciudad else None,
+        # Agrega más campos del usuario si es necesario
+    }
+    
+    data = {
+        'detalles_pedido': detalles,
+        'detalles_usuario': detalles_usuario  # Pasar detalles del usuario al contexto
+    }
+    
+    return JsonResponse(data)
 
 
 

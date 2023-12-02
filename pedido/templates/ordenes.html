@@ -71,6 +71,37 @@
     </div>
 </div>
 
+<div class="modal-background" id="verDetallesModalBg" style="display: none;">
+    <div class="modal" id="verDetallesModal">
+        <h2>Detalles del Pedido</h2>
+        <!-- Mostrar los detalles del pedido aquí en una tabla -->
+        <table class="table table-bordered mt-3">
+            <thead>
+                <!-- Encabezados de la tabla de detalles del pedido -->
+            </thead>
+            <tbody id="detallesPedidoTableBody">
+                <!-- Filas de detalles del pedido -->
+            </tbody>
+        </table>
+
+
+        <!-- Detalles del cliente -->
+        <div class="mt-4">
+            <h3>Información del Usuario</h3>
+            <div id="detallesUsuarioContainer">
+                <!-- Detalles del usuario se agregarán aquí mediante JavaScript -->
+            </div>
+        </div>
+        
+        <!-- Botón para cerrar el modal -->
+        <div class="row mt-3">
+            <div class="col">
+                <button onclick="cerrarModalDetalles()" class="btn btn-secondary btn-sm">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Fin Modales -->
 
 <script>
@@ -102,6 +133,69 @@
     
         // Evitar el comportamiento predeterminado del formulario
         event.preventDefault();
+    }
+
+    function abrirModalDetalles(id) {
+        fetch(`/obtener_detalles_pedido/${id}/`)
+            .then(response => response.json())
+            .then(data => {
+                const detallesUsuarioContainer = document.getElementById('detallesUsuarioContainer');
+                detallesUsuarioContainer.innerHTML = ''; // Limpiar el contenedor de detalles del usuario
+                
+                const detallesUsuario = data.detalles_usuario;
+                for (const [key, value] of Object.entries(detallesUsuario)) {
+                    const detailRow = document.createElement('div');
+                    detailRow.innerHTML = `<strong>${key}:</strong> ${value}`;
+                    detallesUsuarioContainer.appendChild(detailRow);
+                }
+    
+                const detallesPedidoTableBody = document.getElementById('detallesPedidoTableBody');
+                detallesPedidoTableBody.innerHTML = '';
+    
+                const detalles = data.detalles_pedido;
+                detalles.forEach(detalle => {
+                    const row = document.createElement('tr');
+                        
+                    const productNameCell = document.createElement('td');
+                    productNameCell.textContent = detalle.producto_nombre;
+                    row.appendChild(productNameCell);
+    
+                    const quantityCell = document.createElement('td');
+                    quantityCell.textContent = detalle.cantidad;
+                    row.appendChild(quantityCell);
+    
+                    const priceCell = document.createElement('td');
+                    priceCell.textContent = detalle.precio_producto * detalle.cantidad;
+                    row.appendChild(priceCell);
+    
+                    const imageCell = document.createElement('td');
+                    const img = document.createElement('img');
+                    img.src = detalle.imagen_url;
+                    img.alt = detalle.producto_nombre;
+                    img.style.width = '50px';
+                    img.style.height = '50px';
+                    imageCell.appendChild(img);
+                    row.appendChild(imageCell);
+    
+                    detallesPedidoTableBody.appendChild(row);
+                });
+    
+                const modal = document.getElementById("verDetallesModalBg");
+                const modalContent = document.getElementById("verDetallesModal");
+                modal.style.display = "flex";
+                modalContent.style.display = "block";
+            })
+            .catch(error => {
+                console.error('Error al obtener los detalles del pedido:', error);
+            });
+    }
+    
+    function cerrarModalDetalles() {
+        const modal = document.getElementById("verDetallesModalBg");
+        const modalContent = document.getElementById("verDetallesModal");
+    
+        modal.style.display = "none";
+        modalContent.style.display = "none";
     }
 
 
