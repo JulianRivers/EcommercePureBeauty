@@ -1,7 +1,7 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
-from .models import Pedido
-from .models import EstadoPedido
+from .models import EstadoPedido, DetallePedido, Pedido
+
 
 
 # Create your views here.
@@ -20,12 +20,16 @@ def lista_ordenes(request):
 
 def obtener_orden(request, orden_id):
     orden = get_object_or_404(Pedido, id=orden_id)
+    detalles_pedido = DetallePedido.objects.filter(pedido=orden)
+    
     data = {
         'id': orden.id,
         'fecha_de_envio': orden.fecha_de_envio.strftime('%Y-%m-%d') if orden.fecha_de_envio else None,
-        'estado_pedido': orden.estado_pedido.nombre,  # Suponiendo que 'nombre' es un campo de EstadoPedido
+        'estado_pedido': orden.estado_pedido.nombre if orden.estado_pedido else None,
         # Otros campos simples aquí...
+        'detalles_pedido': list(detalles_pedido.values())  # Agrega los detalles del pedido como una lista de diccionarios
     }
+    
     return JsonResponse(data)
 
 def actualizar_orden(request, orden_id):
@@ -43,6 +47,10 @@ def actualizar_orden(request, orden_id):
         orden.estado_pedido = estado_pedido  # Asigna la instancia del EstadoPedido
         orden.save()
 
-        return JsonResponse({'mensaje': 'Orden actualizada correctamente'})
+        return redirect('pedido:ordenes')  # Redirige a la URL de la lista de órdenes
 
     return JsonResponse({'mensaje': 'Error al actualizar la orden'})
+
+
+
+

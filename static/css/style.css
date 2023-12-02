@@ -71,9 +71,9 @@ html, body {
 .modal {
     display: none;
     background-color: #fff;
-    width: 50%; /* Ancho del modal */
-    max-width: 400px; /* Ancho máximo del modal */
-    max-height: 400px; /* Ancho máximo del modal */
+    width: 80%; /* Ancho del modal */
+    max-width: 700px; /* Ancho máximo del modal */
+    max-height: 700px; /* Ancho máximo del modal */
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);

@@ -49,3 +49,4 @@ class DetallePedido(models.Model):
     def __str__(self):
         ''' Obtener cadena representativa del detalle del pedido '''
         return f"Pedido {self.pedido.id} del producto {self.producto.nombre} "
+

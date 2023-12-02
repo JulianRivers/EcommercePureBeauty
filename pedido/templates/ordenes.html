@@ -32,6 +32,9 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-2">
+                            <button class="btn btn-block" onclick="abrirModalDetalles('{{ orden.id }}')">👁</button>
+                        </div>
+                        <div class="col-2">
                             <button class="btn btn-block" onclick="abrirModalEditar('{{ orden.id }}')">✎</button>
                         </div>
                     </div>
@@ -56,12 +59,18 @@
                     <option value="{{ estado_pedido.id }}">{{ estado_pedido.nombre }}</option>
                 {% endfor %}
             </select>
-            
-            <button type="submit">Guardar cambios</button>
+            <div class="row mt-3">
+                <div class="col">
+                    <button class="btn btn-primary btn-sm disabled" type="submit">Guardar cambios</button>
+                </div>
+                <div class="col">
+                    <button onclick="cerrarModalEditar()" class="btn btn-secondary btn-sm">Cerrar</button>
+                </div>
+            </div>
         </form>
-        <button onclick="cerrarModalEditar()">Cerrar</button>
     </div>
 </div>
+
 <!-- Fin Modales -->
 
 <script>
@@ -83,13 +92,18 @@
                 console.error('Error al obtener los datos de la orden:', error);
             });
     }
-
+    
     function cerrarModalEditar() {
         const modal = document.getElementById("editarOrdenModalBg");
         const modalContent = document.getElementById("editarOrdenModal");
-
+    
         modal.style.display = "none";
         modalContent.style.display = "none";
+    
+        // Evitar el comportamiento predeterminado del formulario
+        event.preventDefault();
     }
+
+
 </script>
 {% endblock content %}
