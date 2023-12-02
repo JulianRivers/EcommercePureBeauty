@@ -87,11 +87,28 @@
 <div class="modal-background" id="addProductoBg">
     <!-- Contenido del modal -->
     <div class="modal" id="addProducto">
-        <h2>Agregar Producto</h2>
-        <p><input type="text"></p>
-        <button onclick="cerrarModal()">Cerrar</button>
+        <div class="modal-header">
+            <h2 class="modal-title">Agregar Producto</h2>
+            <button type="button" class="close" onclick="cerrarModal()" aria-label="Cerrar">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form method="POST" action="{% url 'producto:add' %}">
+                {% csrf_token %}
+                {{ form_producto|crispy }}
+                <br>
+                {{ form_subcategoria|crispy }}
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-outline-dark">Añadir</button>
+                    <button type="button" class="btn btn-outline-dark" onclick="cerrarModal()">Cerrar</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
+
 
 <!-- Fin Modales -->
 
