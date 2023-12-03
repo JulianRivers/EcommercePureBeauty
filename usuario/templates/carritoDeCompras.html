@@ -1,57 +1,42 @@
+<!-- Contenido de carritoDeCompra.html -->
 {% extends 'dashboard.html' %}
 {% load crispy_forms_tags %}
 {% load static %}
 
 {% block content %}
 <div class="container">
-    <div class="col-8">
-        <h1>Listado de Clientes</h1>
-    </div>
-</div>
-<table class="table">
-    <!-- Encabezados de la tabla -->
-    <thead style="background-color: #7386D5;">
-        <tr>
-            <th scope="col" style="color:aliceblue;">#</th>
-            <th scope="col" style="color:aliceblue;">Nombre</th>
-            <th scope="col" style="color:aliceblue;">Correo</th>
-            <th scope="col" style="color:aliceblue;">Celular</th>
-            <th scope="col" style="color:aliceblue;">Estado</th>
-            <th scope="col" style="color:aliceblue;">Acción</th>
-        </tr>
-    </thead>
-    <tbody>
-        <!-- {% for cliente in clientes %} -->
-        <tr>
-            <!-- <th scope="row">{{ cliente.id }}</th>
-            <td>{{ cliente.name|default:"" }} {{ cliente.apellidos|default:"" }}</td>
-            <td>{{ cliente.email }}</td>
-            <td>{{ cliente.celular }}</td>
-            <td> {% if cliente.is_active %}
-                Activo
-            {% else %}
-                Inactivo
-            {% endif %}</td> -->
-            <td>
-                <div class="container">
-                    <div class="row">
-                        <div class="col-2">
-                            <button class="btn btn-block" onclick="abrirModalDetalles('{{ orden.id }}')">👁</button>
-                        </div>
-                        <div class="col-2">
-                            <button class="btn btn-block" onclick="abrirModalEditar('{{ orden.id }}')">✎</button>
-                        </div>
+    <div class="col-12">
+        {% if productos_en_carrito %}
+        <h1>Carrito de Compra de {{ nombre_cliente }}</h1>
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for producto_en_carrito in productos_en_carrito %}
+            <div class="col-md-2">
+                <div class="card h-100">
+                    {% if producto_en_carrito.imagen_url %}
+                    <img src="{{ producto_en_carrito.imagen_url }}" class="card-img-top img-fluid" style="height: 150px; width: 160px; object-fit: cover;" alt="{{ producto_en_carrito.producto.nombre }}">
+                    {% else %}
+                    <!-- Aquí puedes poner una imagen por defecto o un mensaje indicando que no hay imagen disponible -->
+                    <p>No hay imagen disponible</p>
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ producto_en_carrito.producto.nombre }}</h5>
+                        <p class="card-text">Cantidad: {{ producto_en_carrito.cantidad }}</p>
+                        <!-- Otros detalles del producto -->
                     </div>
                 </div>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <h1>Carrito de Compra Vacío</h1>
+        <div class="container">
+            <p>El carrito de compras está vacío.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
 
 <script>
-
-
-
+    // Tu lógica de scripts, si es necesaria
 </script>
 {% endblock content %}

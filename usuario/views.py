@@ -3,8 +3,9 @@ from django.shortcuts import render
 from django.shortcuts import render, redirect
 from django.contrib.auth import (login, logout)
 from django.contrib import messages
-
-from .models import (UserProfile)
+from django.core.exceptions import ObjectDoesNotExist
+from .models import (UserProfile, Carrito)
+from producto.models import ProductoEnCarrito
 from .forms import (LoginForm, RegistroForm)
 
 def loginView(request):
@@ -57,9 +58,33 @@ def registerView(request):
 
 
 def lista_clientes(request):
-    clientes = UserProfile.objects.all()
+    clientes = UserProfile.objects.exclude(is_superuser=True)
     
     return render(request, 'clientes.html', {'clientes' : clientes})
 
+def carrito_compras(request, cliente_id):
+    try:
+        cliente = UserProfile.objects.get(pk=cliente_id)
+        carrito_usuario = Carrito.objects.get(usuario=cliente)
+        productos_en_carrito = ProductoEnCarrito.objects.filter(carrito=carrito_usuario)
 
+        # Obtener los datos de imagen para cada producto en el carrito
+        productos_con_imagen = []
+        for producto_en_carrito in productos_en_carrito:
+            imagen_url = producto_en_carrito.producto.imagen.url if producto_en_carrito.producto.imagen else None
+            producto_con_imagen = {
+                'producto': producto_en_carrito.producto,
+                'cantidad': producto_en_carrito.cantidad,
+                'imagen_url': imagen_url
+            }
+            productos_con_imagen.append(producto_con_imagen)
+
+        nombre_cliente = cliente.name  # Obtener el nombre del cliente
+
+    except (UserProfile.DoesNotExist, Carrito.DoesNotExist):
+        # Si el usuario o el carrito no existen, asignamos una lista vacía de productos
+        nombre_cliente = ""  # Si no se encuentra el cliente, asignar cadena vacía
+        productos_con_imagen = []
+
+    return render(request, 'carritoDeCompras.html', {'productos_en_carrito': productos_con_imagen, 'nombre_cliente': nombre_cliente})
 

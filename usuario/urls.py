@@ -10,4 +10,5 @@ urlpatterns = [
     path('logout', views.logoutView, name="logout"),
     path('registro', views.registerView, name='registro'),
     path('clientes', views.lista_clientes, name='clientes'),
+    path('carrito/<int:cliente_id>/', views.carrito_compras, name='carritoDeCompras'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
