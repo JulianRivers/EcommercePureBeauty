@@ -1,0 +1,51 @@
+{% extends 'dashboard.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <div class="col-8">
+        <h1>Listado de Clientes</h1>
+    </div>
+</div>
+<table class="table">
+    <!-- Encabezados de la tabla -->
+    <thead style="background-color: #7386D5;">
+        <tr>
+            <th scope="col" style="color:aliceblue;">#</th>
+            <th scope="col" style="color:aliceblue;">Nombre</th>
+            <th scope="col" style="color:aliceblue;">Correo</th>
+            <th scope="col" style="color:aliceblue;">Estado</th>
+            <th scope="col" style="color:aliceblue;">Acción</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for cliente in clientes %}
+        <tr>
+            <th scope="row">{{ cliente.id }}</th>
+            <td>{{ cliente.name|default:"" }} {{ cliente.apellidos|default:"" }}</td>
+            <td>{{ cliente.email }}</td>
+            <td>{{ cliente.is_active }}</td>
+            <td>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-2">
+                            <button class="btn btn-block" onclick="abrirModalDetalles('{{ orden.id }}')">👁</button>
+                        </div>
+                        <div class="col-2">
+                            <button class="btn btn-block" onclick="abrirModalEditar('{{ orden.id }}')">✎</button>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<script>
+
+
+
+</script>
+{% endblock content %}
