@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.utils import timezone
 
 from .models import (Producto, ProductoSubcategoria, Subcategoria)
 from .forms import (ProductoForm, ProductoSubcategoriaForm)
@@ -28,18 +29,21 @@ def inicio(request):
 
 def addProducto(request):
     if request.method == 'POST':
-        print('hola')
         form_producto = ProductoForm(request.POST)
         form_subcategoria = ProductoSubcategoriaForm(request.POST)
 
         if form_producto.is_valid() and form_subcategoria.is_valid():
-            # Guarda el producto
-            producto = form_producto.save()
+            producto = form_producto.save(commit=False)
+            producto.is_activo = True
+            producto.precio_desc = producto.precio_act
+            producto.fecha_inicio_desc = timezone.now()
+            producto.fecha_fin_desc = timezone.now()
+            producto.ult_actualizacion = timezone.now()
+            producto.save()
 
-            # Guarda la relación ProductoSubcategoria
             producto_subcategoria = form_subcategoria.save(commit=False)
             producto_subcategoria.producto = producto
             producto_subcategoria.save()
 
-            return redirect('usuario:index')
+            return redirect('producto:inicio')
     return render(request, 'productos.html',)
