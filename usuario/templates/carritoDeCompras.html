@@ -21,9 +21,9 @@
         </tr>
     </thead>
     <tbody>
-        {% for cliente in clientes %}
+        <!-- {% for cliente in clientes %} -->
         <tr>
-            <th scope="row">{{ cliente.id }}</th>
+            <!-- <th scope="row">{{ cliente.id }}</th>
             <td>{{ cliente.name|default:"" }} {{ cliente.apellidos|default:"" }}</td>
             <td>{{ cliente.email }}</td>
             <td>{{ cliente.celular }}</td>
@@ -31,12 +31,12 @@
                 Activo
             {% else %}
                 Inactivo
-            {% endif %}</td>
+            {% endif %}</td> -->
             <td>
                 <div class="container">
                     <div class="row">
                         <div class="col-2">
-                            <button class="btn btn-block" onclick="abrirModalDetalles('{{ orden.id }}')">🛒</button>
+                            <button class="btn btn-block" onclick="abrirModalDetalles('{{ orden.id }}')">👁</button>
                         </div>
                         <div class="col-2">
                             <button class="btn btn-block" onclick="abrirModalEditar('{{ orden.id }}')">✎</button>

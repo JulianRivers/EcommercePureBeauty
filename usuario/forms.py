@@ -16,5 +16,5 @@ class LoginForm(forms.Form):
 class RegistroForm(forms.ModelForm):
     class Meta:
         model = UserProfile
-        fields = ['name', 'apellidos', 'direccion', 'email', 'password','ciudad']
+        fields = ['name', 'apellidos', 'direccion', 'email', 'password', 'celular', 'ciudad']
 
