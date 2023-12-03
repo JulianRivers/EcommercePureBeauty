@@ -75,6 +75,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     name = models.CharField('Nombres', max_length=100)
     apellidos = models.CharField('Apellidos', max_length=100)
     direccion = models.CharField('Direccion', max_length=500)
+    celular = models.CharField('Celular', max_length=20, null=True)
     ciudad = models.ForeignKey(Ciudad, on_delete=models.CASCADE, null=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=True)

@@ -54,3 +54,12 @@ def registerView(request):
         'form': form,
     }
     return render(request, 'registro.html', context)
+
+
+def lista_clientes(request):
+    clientes = UserProfile.objects.all()
+    
+    return render(request, 'clientes.html', {'clientes' : clientes})
+
+
+
