@@ -68,23 +68,28 @@ def carrito_compras(request, cliente_id):
         carrito_usuario = Carrito.objects.get(usuario=cliente)
         productos_en_carrito = ProductoEnCarrito.objects.filter(carrito=carrito_usuario)
 
-        # Obtener los datos de imagen para cada producto en el carrito
-        productos_con_imagen = []
+        total_compra = 0  # Inicializar el total de la compra
+        productos_con_info = []
+
         for producto_en_carrito in productos_en_carrito:
             imagen_url = producto_en_carrito.producto.imagen.url if producto_en_carrito.producto.imagen else None
-            producto_con_imagen = {
+            precio_total = producto_en_carrito.producto.precio_act * producto_en_carrito.cantidad  # Precio * Cantidad
+            producto_con_info = {
                 'producto': producto_en_carrito.producto,
                 'cantidad': producto_en_carrito.cantidad,
-                'imagen_url': imagen_url
+                'imagen_url': imagen_url,
+                'precio': producto_en_carrito.producto.precio_act,
+                'precio_total': precio_total  # Precio total del producto
             }
-            productos_con_imagen.append(producto_con_imagen)
+            total_compra += precio_total  # Sumar al total de la compra
+            productos_con_info.append(producto_con_info)
 
-        nombre_cliente = cliente.name  # Obtener el nombre del cliente
+        nombre_cliente = cliente.name
 
     except (UserProfile.DoesNotExist, Carrito.DoesNotExist):
-        # Si el usuario o el carrito no existen, asignamos una lista vacía de productos
-        nombre_cliente = ""  # Si no se encuentra el cliente, asignar cadena vacía
-        productos_con_imagen = []
+        nombre_cliente = ""
+        total_compra = 0
+        productos_con_info = []
 
-    return render(request, 'carritoDeCompras.html', {'productos_en_carrito': productos_con_imagen, 'nombre_cliente': nombre_cliente})
+    return render(request, 'carritoDeCompras.html', {'productos_en_carrito': productos_con_info, 'nombre_cliente': nombre_cliente, 'total_compra': total_compra})
 

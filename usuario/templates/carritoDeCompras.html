@@ -8,12 +8,13 @@
     <div class="col-12">
         {% if productos_en_carrito %}
         <h1>Carrito de Compra de {{ nombre_cliente }}</h1>
+        <br>
         <div class="row row-cols-1 row-cols-md-3 g-4">
             {% for producto_en_carrito in productos_en_carrito %}
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <div class="card h-100">
                     {% if producto_en_carrito.imagen_url %}
-                    <img src="{{ producto_en_carrito.imagen_url }}" class="card-img-top img-fluid" style="height: 150px; width: 160px; object-fit: cover;" alt="{{ producto_en_carrito.producto.nombre }}">
+                    <img src="{{ producto_en_carrito.imagen_url }}" class="card-img-top img-fluid" style="height: 250px; width: 270px; object-fit: cover;" alt="{{ producto_en_carrito.producto.nombre }}">
                     {% else %}
                     <!-- Aquí puedes poner una imagen por defecto o un mensaje indicando que no hay imagen disponible -->
                     <p>No hay imagen disponible</p>
@@ -21,12 +22,15 @@
                     <div class="card-body">
                         <h5 class="card-title">{{ producto_en_carrito.producto.nombre }}</h5>
                         <p class="card-text">Cantidad: {{ producto_en_carrito.cantidad }}</p>
-                        <!-- Otros detalles del producto -->
+                        <p class="card-text">Precio: {{ producto_en_carrito.precio }}</p>
+                        <p class="card-text">Precio Total: {{ producto_en_carrito.precio_total }}</p> <!-- Mostrar precio total -->
                     </div>
                 </div>
             </div>
             {% endfor %}
         </div>
+        <br>
+        <p>Total de la compra: {{ total_compra }}</p> <!-- Mostrar total de la compra -->
         {% else %}
         <h1>Carrito de Compra Vacío</h1>
         <div class="container">
@@ -34,6 +38,7 @@
         </div>
         {% endif %}
     </div>
+</div>
 </div>
 
 <script>
