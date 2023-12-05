@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from .models import (UserProfile, Carrito)
 from producto.models import ProductoEnCarrito
+from pedido.models import Pedido, DetallePedido
 from .forms import (LoginForm, RegistroForm)
 
 def loginView(request):
@@ -92,4 +93,24 @@ def carrito_compras(request, cliente_id):
         productos_con_info = []
 
     return render(request, 'carritoDeCompras.html', {'productos_en_carrito': productos_con_info, 'nombre_cliente': nombre_cliente, 'total_compra': total_compra})
+
+def pedidos_cliente(request, cliente_id):
+    try:
+        cliente = UserProfile.objects.get(pk=cliente_id)
+        pedidos = Pedido.objects.filter(usuario=cliente)
+        detalles_pedidos = []
+
+        for pedido in pedidos:
+            detalles_pedido = DetallePedido.objects.filter(pedido=pedido)
+            
+            detalles_pedidos.append({
+                'pedido': pedido,
+                'detalles': detalles_pedido,
+                'total': sum(detalle.precio_producto * detalle.cantidad for detalle in detalles_pedido)
+            })
+
+    except UserProfile.DoesNotExist:
+        detalles_pedidos = []
+
+    return render(request, 'pedidos_cliente.html', {'detalles_pedidos': detalles_pedidos, 'cliente': cliente})
 

@@ -1,0 +1,45 @@
+{% extends 'dashboard.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <div class="col-8">
+        <h1>Detalles del Pedido de {{ cliente.name }}</h1>
+    </div>
+    <div class="col-12">
+        {% for pedido_detalle in detalles_pedidos %}
+        <div class="card mb-3 d-flex flex-column">
+            <div class="card-header">
+                <h5>Pedido: {{ pedido_detalle.pedido.id }}</h5>
+            </div>
+            <div class="card-body">
+                <p>Dirección de Entrega: {{ pedido_detalle.pedido.direccion_entrega }}</p>
+                <p>Fecha del Pedido: {{ pedido_detalle.pedido.fecha|date:"d/m/y" }}</p>
+                <!-- Otros detalles del pedido que desees mostrar -->
+                <h6>Productos:</h6>
+                
+                {% for detalle in pedido_detalle.detalles %}
+                    <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                        {% if detalle.producto.imagen %}
+                            <img src="{{ detalle.producto.imagen.url }}" alt="Imagen del Producto" width="170" height="180">
+                        {% endif %}
+                        <div style="margin-left: 10px;">
+                            <p>{{ detalle.producto.nombre }}</p>
+                            <p>Cantidad: {{ detalle.cantidad }}</p>
+                            <p>Precio Total: {{ pedido_detalle.total }}</p>
+                            <!-- Otros detalles del producto -->
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        </div>
+        {% endfor %}
+    </div>
+
+
+<script>
+    
+</script>
+{% endblock content %}
