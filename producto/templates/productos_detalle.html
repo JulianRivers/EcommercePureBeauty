@@ -67,14 +67,10 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-4">
-                            <a href="producto/delete/{{producto.id}}">
-                                <button class="btn btn-outline-dark btn-block">🗑</button>
-                            </a>
+                            <button class="btn btn-outline-dark btn-block">🗑</button>
                         </div>
                         <div class="col-4">
-                            <a href="producto/{{producto.id}}">
-                                <button class="btn btn-outline-dark btn-block" onclick="abrirModalDetalle()">👁</button>
-                            </a>
+                            <button class="btn btn-outline-dark btn-block" onclick="abrirModalDetalle()">👁</button>
                         </div>
                         <div class="col-4">
                             <button class="btn btn-outline-dark btn-block">✎</button>
@@ -98,7 +94,7 @@
             </button>
         </div>
         <div class="modal-body">
-            <form method="POST" action="{% url 'producto:add' %}" enctype="multipart/form-data">
+            <form method="POST" action="{% url 'producto:add' %}">
                 {% csrf_token %}
                 {{ form_producto|crispy }}
                 <br>
@@ -112,50 +108,37 @@
         </div>
     </div>
 </div>
+
 <div class="modal-background" id="detallebackground" style="display: none;">
     <!-- Contenido del modal -->
     <div class="modal" id="detalleProducto" style="max-height: 700px; overflow-y: auto;">
         <div class="modal-header">
-            <h2 class="modal-title">{{ producto.nombre }}</h2>
-            <button type="button" class="close" onclick="cerrarModalDetalle()" aria-label="Cerrar">
-                <span aria-hidden="true">&times;</span>
-            </button>
+            <h2 class="modal-title">{{ detalle.nombre }}</h2>
+            <a href="{% url 'producto:inicio' %}">
+                <button type="button" class="close" onclick="cerrarModalDetalle()" aria-label="Cerrar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </a>
         </div>
         <div class="modal-body">
             <!-- Muestra la imagen centrada -->
             <div class="text-center">
-                <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" class="img-fluid"
+                <img src="{{ detalle.imagen.url }}" alt="{{ detalle.nombre }}" class="img-fluid"
                     style="max-width: 300px; max-height: 200px;"">
             </div>
 
-            <!-- Muestra las demás detalles del producto -->
-            <h4>Precio: ${{ producto.precio_act|floatformat:0|intcomma }}</h4>
-            <p>Stock: {{ producto.stock }}</p>
-            <p>Descripción: {{ producto.descripcion }}</p>
+           
+            <h4>Precio: </h4>
+            <p>${{ detalle.precio_act|floatformat:0|intcomma }}</p>
+            <h4>Cantidad: </h4>
+            <p>{{ detalle.stock }}</p>
+            <h4>Descripción: </h4>
+            <p>{{ detalle.descripcion }}</p>
         </div>
         <div class=" modal-footer">
-                <button type="button" class="btn btn-outline-dark" onclick="cerrarModalDetalle()">Cerrar</button>
-            </div>
-        </div>
-    </div>
-    <div class="modal-background" id="eliminarBG">
-        <!-- Contenido del modal -->
-        <div class="modal-sm" id="eliminarProducto">
-            <div class="modal-header">
-                <h2 class="modal-title">Eliminar Producto</h2>
-                <button type="button" class="close" onclick="cerrarModal()" aria-label="Cerrar">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form method="POST" action="{% url 'producto:add' %}" enctype="multipart/form-data">
-                    <p>¿Deseas eliminar el producto?</p>
-                    <div class="modal-footer">
-                        <a href="producto/delete/"></a>
-                        <button type="submit" class="btn btn-outline-danger">Eliminar</button>
-                        <button type="button" class="btn btn-outline-dark" onclick="cerrarModal()">Cerrar</button>
-                    </div>
-                </form>
+                <a href="{% url 'producto:inicio' %}">
+                    <button type="button" class="btn btn-outline-dark" onclick="cerrarModalDetalle()">Cerrar</button>
+                </a>
             </div>
         </div>
     </div>
@@ -186,19 +169,8 @@
             document.getElementById("detalleProducto").style.display = "none";
         }
         cerrarModalDetalle()
+        abrirModalDetalle()
 
-        function abrirModalDetalle() {
-            // Mostrar el fondo oscuro y el modal
-            document.getElementById("eliminarBG").style.display = "flex";
-            document.getElementById("eliminarProducto").style.display = "block";
-        }
-
-        function cerrarModalDetalle() {
-            // Ocultar el fondo oscuro y el modal
-            document.getElementById("eliminarBG").style.display = "none";
-            document.getElementById("eliminarProducto").style.display = "none";
-        }
-        cerrarModalDetalle()
     </script>
 
     {% endblock content %}
