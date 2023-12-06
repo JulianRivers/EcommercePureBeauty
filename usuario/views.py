@@ -3,8 +3,10 @@ from django.shortcuts import render
 from django.shortcuts import render, redirect
 from django.contrib.auth import (login, logout)
 from django.contrib import messages
-
-from .models import (UserProfile)
+from django.core.exceptions import ObjectDoesNotExist
+from .models import (UserProfile, Carrito)
+from producto.models import ProductoEnCarrito
+from pedido.models import Pedido, DetallePedido
 from .forms import (LoginForm, RegistroForm)
 
 def loginView(request):
@@ -57,9 +59,58 @@ def registerView(request):
 
 
 def lista_clientes(request):
-    clientes = UserProfile.objects.all()
+    clientes = UserProfile.objects.exclude(is_superuser=True)
     
     return render(request, 'clientes.html', {'clientes' : clientes})
 
+def carrito_compras(request, cliente_id):
+    try:
+        cliente = UserProfile.objects.get(pk=cliente_id)
+        carrito_usuario = Carrito.objects.get(usuario=cliente)
+        productos_en_carrito = ProductoEnCarrito.objects.filter(carrito=carrito_usuario)
 
+        total_compra = 0  # Inicializar el total de la compra
+        productos_con_info = []
+
+        for producto_en_carrito in productos_en_carrito:
+            imagen_url = producto_en_carrito.producto.imagen.url if producto_en_carrito.producto.imagen else None
+            precio_total = producto_en_carrito.producto.precio_act * producto_en_carrito.cantidad  # Precio * Cantidad
+            producto_con_info = {
+                'producto': producto_en_carrito.producto,
+                'cantidad': producto_en_carrito.cantidad,
+                'imagen_url': imagen_url,
+                'precio': producto_en_carrito.producto.precio_act,
+                'precio_total': precio_total  # Precio total del producto
+            }
+            total_compra += precio_total  # Sumar al total de la compra
+            productos_con_info.append(producto_con_info)
+
+        nombre_cliente = cliente.name
+
+    except (UserProfile.DoesNotExist, Carrito.DoesNotExist):
+        nombre_cliente = ""
+        total_compra = 0
+        productos_con_info = []
+
+    return render(request, 'carritoDeCompras.html', {'productos_en_carrito': productos_con_info, 'nombre_cliente': nombre_cliente, 'total_compra': total_compra})
+
+def pedidos_cliente(request, cliente_id):
+    try:
+        cliente = UserProfile.objects.get(pk=cliente_id)
+        pedidos = Pedido.objects.filter(usuario=cliente)
+        detalles_pedidos = []
+
+        for pedido in pedidos:
+            detalles_pedido = DetallePedido.objects.filter(pedido=pedido)
+            
+            detalles_pedidos.append({
+                'pedido': pedido,
+                'detalles': detalles_pedido,
+                'total': sum(detalle.precio_producto * detalle.cantidad for detalle in detalles_pedido)
+            })
+
+    except UserProfile.DoesNotExist:
+        detalles_pedidos = []
+
+    return render(request, 'pedidos_cliente.html', {'detalles_pedidos': detalles_pedidos, 'cliente': cliente})
 

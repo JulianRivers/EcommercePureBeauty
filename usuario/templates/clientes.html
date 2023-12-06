@@ -36,10 +36,14 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-2">
-                            <button class="btn btn-block" onclick="abrirModalDetalles('{{ orden.id }}')">🛒</button>
+                            <a href="{% url 'usuario:carritoDeCompras' cliente.id %}">
+                                <button class="btn btn-block">🛒</button>
+                            </a>
                         </div>
                         <div class="col-2">
-                            <button class="btn btn-block" onclick="abrirModalEditar('{{ orden.id }}')">✎</button>
+                            <a href="{% url 'usuario:pedidos_cliente' cliente.id %}">
+                                <button class="btn btn-block">👁</button>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -50,8 +54,6 @@
 </table>
 
 <script>
-
-
-
+    
 </script>
 {% endblock content %}
