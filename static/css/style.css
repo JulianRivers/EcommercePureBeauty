@@ -79,3 +79,17 @@ html, body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     margin: auto;
 }
+
+
+/* Estilos para el modal */
+.modal2 {
+    display: none;
+    background-color: #fff;
+    width: 20%; /* Ancho del modal */
+    max-width: 200px; /* Ancho máximo del modal */
+    max-height: 300px; /* Ancho máximo del modal */
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    margin: auto;
+}
