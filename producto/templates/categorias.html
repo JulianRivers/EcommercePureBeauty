@@ -1,0 +1,332 @@
+{% extends 'dashboard.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-8">
+            <h1>Listado de Categorias Padre</h1>
+        </div>
+        <div class="col-4 text-right">
+            <button class="btn btn-outline-dark" onclick="abrirModal()">Agregar Categorias Padre</button>
+        </div>
+    </div>
+
+</div>
+<nav aria-label="Page navigation example">
+    <ul class="pagination">
+        <li class="page-item">
+            <a class="page-link" style="color: black;" href="#" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span>
+            </a>
+        </li>
+        <li class="page-item"><a class="page-link" style="color: black;" href="#">1</a></li>
+        <li class="page-item"><a class="page-link" style="color: black;" href="#">2</a></li>
+        <li class="page-item"><a class="page-link" style="color: black;" href="#">3</a></li>
+        <li class="page-item">
+            <a class="page-link" style="color: black;" href="#" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Next</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+<table class="table">
+    <thead style="background-color: #7386D5;">
+        <tr>
+            <th scope="col" style="color:aliceblue;">#</th>
+            <th scope="col" style="color:aliceblue;">Categoria Padre</th>
+            <th scope="col" style="color:aliceblue;">Categoria</th>
+            <th scope="col" style="color:aliceblue;">Acción</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for categoria in categorias %}
+        <tr>
+            <th scope="row">{{ forloop.counter }}</th>
+            <td>
+                {% if categoria.categoria_padre is none %}
+                -
+                {% else %}
+                {{ categoria.categoria_padre }}
+                {% endif %}
+            </td>
+            <td>{{ categoria.nombre}}</td>
+
+            <td>
+                <div class="container">
+
+                    {% if categoria.categoria_padre is none %}
+                    <div class="row">
+                        <div class="col-6">
+                            <a href="producto/delete/{{producto.id}}">
+                                <button class="btn btn-outline-dark btn-block">✚</button>
+                            </a>
+                        </div>
+                        <div class="col-6">
+                            <a href="producto/delete/{{producto.id}}">
+                                <button class="btn btn-outline-dark btn-block">🗑</button>
+                            </a>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="row">
+                        <div class="col-6">
+                            <a href="producto/delete/{{producto.id}}">
+                                <button class="btn btn-outline-dark btn-block">🗑</button>
+                            </a>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div class="container">
+    <div class="row">
+        <div class="col-8">
+            <h1>Listado de Categorias</h1>
+        </div>
+        <div class="col-4 text-right">
+            <button class="btn btn-outline-dark" onclick="abrirModal()">Agregar Categorias</button>
+        </div>
+    </div>
+
+</div>
+<nav aria-label="Page navigation example">
+    <ul class="pagination">
+        <li class="page-item">
+            <a class="page-link" style="color: black;" href="#" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span>
+            </a>
+        </li>
+        <li class="page-item"><a class="page-link" style="color: black;" href="#">1</a></li>
+        <li class="page-item"><a class="page-link" style="color: black;" href="#">2</a></li>
+        <li class="page-item"><a class="page-link" style="color: black;" href="#">3</a></li>
+        <li class="page-item">
+            <a class="page-link" style="color: black;" href="#" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Next</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+<table class="table">
+    <thead style="background-color: #7386D5;">
+        <tr>
+            <th scope="col" style="color:aliceblue;">#</th>
+            <th scope="col" style="color:aliceblue;">Categoria Padre</th>
+            <th scope="col" style="color:aliceblue;">Categoria</th>
+            <th scope="col" style="color:aliceblue;">Acción</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for categoria in subcategorias %}
+        <tr>
+            <th scope="row">{{ forloop.counter }}</th>
+            <td>{{ categoria.categoria}}</td>
+            <td>{{ categoria.nombre}}</td>
+
+            <td>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-6">
+                            <button class="btn btn-outline-dark btn-block">✎</button>
+                        </div>
+                        <div class="col-6">
+                            <a href="producto/delete/{{producto.id}}">
+                                <button class="btn btn-outline-dark btn-block">🗑</button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- MODALES -->
+
+
+<div class="modal-background" id="addCategoriaPadreBG" style="display: none;">
+    <!-- Contenido del modal -->
+    <div class="modal" id="addCategoriaPadre">
+        <div class="modal-header">
+            <h2 class="modal-title">Agregar categoria padre</h2>
+            <button type="button" class="close" onclick="cerrarModal()" aria-label="Cerrar">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form method="POST" action="{% url 'producto:add' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form_categoria_padre|crispy }}
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-outline-dark">Añadir</button>
+                    <button type="button" class="btn btn-outline-dark" onclick="cerrarModal()">Cerrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal-background" id="addCategoriaBG" style="display: none;">
+    <!-- Contenido del modal -->
+    <div class="modal" id="addCategoria" style="max-height: 700px; overflow-y: auto;">
+        <div class="modal-header">
+            <h2 class="modal-title">{{ producto.nombre }}</h2>
+            <button type="button" class="close" onclick="cerrarModalDetalle()" aria-label="Cerrar">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <!-- Muestra la imagen centrada -->
+            <div class="text-center">
+                <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" class="img-fluid"
+                    style="max-width: 300px; max-height: 200px;"">
+            </div>
+
+            <!-- Muestra las demás detalles del producto -->
+            <h4>Precio: ${{ producto.precio_act|floatformat:0|intcomma }}</h4>
+            <p>Stock: {{ producto.stock }}</p>
+            <p>Descripción: {{ producto.descripcion }}</p>
+        </div>
+        <div class=" modal-footer">
+                <button type="button" class="btn btn-outline-dark" onclick="cerrarModalDetalle()">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-background" id="addSubcategoriaBG" style="display: none;">
+        <!-- Contenido del modal -->
+        <div class="modal" id="addSubcategoria" style="max-height: 700px; overflow-y: auto;">
+            <div class="modal-header">
+                <h2 class="modal-title">{{ producto.nombre }}</h2>
+                <button type="button" class="close" onclick="cerrarModalDetalle()" aria-label="Cerrar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Muestra la imagen centrada -->
+                <div class="text-center">
+                    <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" class="img-fluid"
+                        style="max-width: 300px; max-height: 200px;"">
+            </div>
+
+            <!-- Muestra las demás detalles del producto -->
+            <h4>Precio: ${{ producto.precio_act|floatformat:0|intcomma }}</h4>
+            <p>Stock: {{ producto.stock }}</p>
+            <p>Descripción: {{ producto.descripcion }}</p>
+        </div>
+        <div class=" modal-footer">
+                    <button type="button" class="btn btn-outline-dark" onclick="cerrarModalDetalle()">Cerrar</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-background" id="eliminarProductoBG" style="display: none;">
+            <!-- Contenido del modal -->
+            <div class="modal-sm" id="eliminarProducto">
+                <div class="modal-header">
+                    <h2 class="modal-title">Eliminar Producto</h2>
+                    <button type="button" class="close" onclick="cerrarModal()" aria-label="Cerrar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="{% url 'producto:add' %}" enctype="multipart/form-data">
+                        <p>¿Deseas eliminar el producto?</p>
+                        <div class="modal-footer">
+                            <a href="producto/delete/"></a>
+                            <button type="submit" class="btn btn-outline-danger">Eliminar</button>
+                            <button type="button" class="btn btn-outline-dark" onclick="cerrarModal()">Cerrar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+
+        <div class="modal-background" id="eliminarCategoriaPadreBG" style="display: none;">
+            <!-- Contenido del modal -->
+            <div class="modal-sm" id="eliminarCategoriaPadre">
+                <div class="modal-header">
+                    <h2 class="modal-title">Eliminar Producto</h2>
+                    <button type="button" class="close" onclick="cerrarModal()" aria-label="Cerrar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="{% url 'producto:add' %}" enctype="multipart/form-data">
+                        <p>¿Deseas eliminar el producto?</p>
+                        <div class="modal-footer">
+                            <a href="producto/delete/"></a>
+                            <button type="submit" class="btn btn-outline-danger">Eliminar</button>
+                            <button type="button" class="btn btn-outline-dark" onclick="cerrarModal()">Cerrar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="modal-background" id="eliminarCategoriaBG" style="display: none;">
+            <!-- Contenido del modal -->
+            <div class="modal-sm" id="eliminarCategoria">
+                <div class="modal-header">
+                    <h2 class="modal-title">Eliminar Producto</h2>
+                    <button type="button" class="close" onclick="cerrarModal()" aria-label="Cerrar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="{% url 'producto:add' %}" enctype="multipart/form-data">
+                        <p>¿Deseas eliminar el producto?</p>
+                        <div class="modal-footer">
+                            <a href="producto/delete/"></a>
+                            <button type="submit" class="btn btn-outline-danger">Eliminar</button>
+                            <button type="button" class="btn btn-outline-dark" onclick="cerrarModal()">Cerrar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="modal-background" id="eliminarSubcategoriaBG" style="display: none;">
+            <!-- Contenido del modal -->
+            <div class="modal-sm" id="eliminarSubcategoria">
+                <div class="modal-header">
+                    <h2 class="modal-title">Eliminar Producto</h2>
+                    <button type="button" class="close" onclick="cerrarModal()" aria-label="Cerrar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="{% url 'producto:add' %}" enctype="multipart/form-data">
+                        <p>¿Deseas eliminar el producto?</p>
+                        <div class="modal-footer">
+                            <a href="producto/delete/"></a>
+                            <button type="submit" class="btn btn-outline-danger">Eliminar</button>
+                            <button type="button" class="btn btn-outline-dark" onclick="cerrarModal()">Cerrar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- Fin Modales -->
+
+        <script src="{% static 'js/script.js' %}"></script>
+
+        {% endblock content %}
