@@ -15,9 +15,7 @@
             <div class="col-md-3">
                 <div class="card h-100">
                     {% if producto_en_carrito.imagen_url %}
-                    <img src="{{ producto_en_carrito.imagen_url }}" class="card-img-top img-fluid"
-                        style="height: 250px; width: 270px; object-fit: cover;"
-                        alt="{{ producto_en_carrito.producto.nombre }}">
+                    <img src="{{ producto_en_carrito.imagen_url }}" class="card-img-top img-fluid" style="height: 250px; width: 270px; object-fit: cover;" alt="{{ producto_en_carrito.producto.nombre }}">
                     {% else %}
                     <!-- Aquí puedes poner una imagen por defecto o un mensaje indicando que no hay imagen disponible -->
                     <p>No hay imagen disponible</p>
@@ -25,16 +23,15 @@
                     <div class="card-body">
                         <h5 class="card-title">{{ producto_en_carrito.producto.nombre }}</h5>
                         <p class="card-text">Cantidad: {{ producto_en_carrito.cantidad }}</p>
-                        <p class="card-text">Precio: {{ producto_en_carrito.precio|flotformat:0|intcomma }}</p>
-                        <p class="card-text">Precio Total: {{ producto_en_carrito.precio_total|flotformat:0|intcomma }}
-                        </p> <!-- Mostrar precio total -->
+                        <p class="card-text">Precio: {{ producto_en_carrito.precio|floatformat:0|intcomma }}</p>
+                        <p class="card-text">Precio Total: {{ producto_en_carrito.precio_total|floatformat:0|intcomma }}</p> <!-- Mostrar precio total -->
                     </div>
                 </div>
             </div>
             {% endfor %}
         </div>
         <br>
-        <p>Total de la compra: {{ total_compra|flotformat:0|intcomma }}</p> <!-- Mostrar total de la compra -->
+        <p>Total de la compra: {{ total_compra|floatformat:0|intcomma }}</p> <!-- Mostrar total de la compra -->
         {% else %}
         <h1>Carrito de Compra Vacío</h1>
         <div class="container">
