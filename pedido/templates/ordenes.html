@@ -45,26 +45,29 @@
     </tbody>
 </table>
 <!-- MODALES -->
-<div class="modal-background" id="editarOrdenModalBg" style="display: none;">
-    <div class="modal" id="editarOrdenModal">
-        <h2>Editar Orden</h2>
+<div class="modal-background" id="editarOrdenModalBg" style="display: none; background-color: rgba(0, 0, 0, 0.5); position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 999;">
+    <div class="modal2" id="editarOrdenModal" style="background-color: white; padding: 20px; border-radius: 8px; width: 60%; max-width: 600px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+        <h2 style="text-align: center; margin-bottom: 20px;">Editar Orden</h2>
         <form id="editarOrdenForm" method="POST">
             {% csrf_token %}
-            <label for="fechaEnvioInput">Fecha de Envío:</label>
-            <input type="date" id="fechaEnvioInput" name="fecha_envio">
-            
-            <label for="estadoPedidoInput">Estado de Pedido:</label>
-            <select id="estadoPedidoInput" name="estado_pedido">
-                {% for estado_pedido in estados_pedidos %}
-                    <option value="{{ estado_pedido.id }}">{{ estado_pedido.nombre }}</option>
-                {% endfor %}
-            </select>
+            <div style="margin-bottom: 15px;">
+                <label for="fechaEnvioInput" style="display: block; font-weight: bold;">Fecha de Envío:</label>
+                <input type="date" id="fechaEnvioInput" name="fecha_envio" class="form-control">
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label for="estadoPedidoInput" style="display: block; font-weight: bold;">Estado de Pedido:</label>
+                <select id="estadoPedidoInput" name="estado_pedido" class="form-control">
+                    {% for estado_pedido in estados_pedidos %}
+                        <option value="{{ estado_pedido.id }}">{{ estado_pedido.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
             <div class="row mt-3">
                 <div class="col">
-                    <button class="btn btn-primary btn-sm disabled" type="submit">Guardar cambios</button>
+                    <button class="btn btn-secondary btn-sm" type="submit" style="width: 100%;">Guardar cambios</button>
                 </div>
                 <div class="col">
-                    <button onclick="cerrarModalEditar()" class="btn btn-secondary btn-sm">Cerrar</button>
+                    <button onclick="cerrarModalEditar()" class="btn btn-secondary btn-sm" style="width: 100%;">Cerrar</button>
                 </div>
             </div>
         </form>
