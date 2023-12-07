@@ -7,13 +7,19 @@
     color: #3b71ca !important;
   }
   
-html, body {
+
+  html, body {
     height: 100%;
     margin: 0;
-  }
-  
+    overflow: hidden; /* Evita el desplazamiento vertical */
+}
+
 .gradient-custom {
-    background: linear-gradient(to right, #d1a5d5, #FF69B4); /* Utilicé tonos pastel de dorado y rosa */
+    min-height: 100vh; /* Usa min-height en lugar de height */
+    background: linear-gradient(to right, #d1a5d5, #FF69B4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .login-section {
@@ -74,6 +80,20 @@ html, body {
     width: 50%; /* Ancho del modal */
     max-width: 500px; /* Ancho máximo del modal */
     max-height: 700px; /* Ancho máximo del modal */
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    margin: auto;
+}
+
+
+/* Estilos para el modal */
+.modal2 {
+    display: none;
+    background-color: #fff;
+    width: 40%; /* Ancho del modal */
+    max-width: 400px; /* Ancho máximo del modal */
+    max-height: 300px; /* Ancho máximo del modal */
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
