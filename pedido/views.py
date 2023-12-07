@@ -38,7 +38,7 @@ def actualizar_orden(request, orden_id):
         nuevo_estado_pedido_id = request.POST.get('estado_pedido')
 
         # Busca el objeto EstadoPedido por su ID
-        estado_pedido = EstadoPedido.objects.get(pk=nuevo_estado_pedido_id)
+        estado_pedido = get_object_or_404(EstadoPedido, pk=nuevo_estado_pedido_id)
 
         # Actualiza la orden con los nuevos datos
         orden.fecha_de_envio = nueva_fecha_envio
