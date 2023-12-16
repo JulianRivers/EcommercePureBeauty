@@ -1,14 +1,14 @@
-# TravelEasy✈️
+# Ecommerce Pure Beauty💄🦩
 
-Sistema de gestión de viaticos hecho  en Django 4.1.2🐍
+Sistema de gestión de un ecommerce de belleza hecho  en Django 4.1.2🐍
 
 ## Instalación y configuración⚙️
 
 ### 1. Clonar el proyecto
 
 ```bash
-git clone https://github.com/JulianRivers/TravelEasy.git
-cd TravelEasy
+git clone https://github.com/JulianRivers/EcommercePureBeauty.git
+cd EcommercePureBeauty
 ```
 
 ### 2. Instalar dependencias y configurar venv
@@ -23,7 +23,9 @@ pip install -r .\requirements.txt
 
 ```bash
 python manage.py makemigrations
-python manage.py makemigrations gerente
+python manage.py makemigrations pedido
+python manage.py makemigrations usuario
+python manage.py makemigrations producto
 python manage.py migrate
 ```
 
@@ -53,12 +55,9 @@ te pedirá Email, Nombres, Apellidos, Password
 
 Dejaré unos usuarios registrados
 
-```usuario administrador/gerente```
+```usuario administrador```
 
 - **correo**: <admin@admin.com>
 - **contraseña**: 1234
 
-```usuario empleado con eventos y viaticos```
 
-- **correo**: <empleado@traveleasy.com>
-- **contraseña**: 1234
