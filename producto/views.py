@@ -1,8 +1,10 @@
+import json
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 
 from .models import (Producto, ProductoSubcategoria, Subcategoria, Categoria)
-from .forms import (ProductoForm, ProductoSubcategoriaForm)
+from .forms import (CategoriaPadreForm, ProductoForm, ProductoSubcategoriaForm)
 # Create your views here.
 
 def categoria(request):
@@ -12,6 +14,28 @@ def categoria(request):
     #categorias_padre = Categoria.objects.filter(categoria_padre__isnull=False)
 
     context = {
+        'subcategorias': subcategorias,
+        'categorias': categorias_padre,
+        'categorias_padre':categorias_sin_padre
+    }
+    return render(request, 'categorias.html', context)
+
+def agregar_categoria(request):
+    if request.method == 'POST':
+        form = CategoriaPadreForm(request.POST)
+        print('unu')
+        if form.is_valid():
+            print('holaaaaaaaaa')
+            form.save()
+    else:
+        form = CategoriaPadreForm()
+    
+    subcategorias = Subcategoria.objects.all()
+    categorias_padre = Categoria.objects.all()
+    categorias_sin_padre = Categoria.objects.filter(categoria_padre__isnull=True)
+
+    context = {
+        'form_cat_padre':form,
         'subcategorias': subcategorias,
         'categorias': categorias_padre,
         'categorias_padre':categorias_sin_padre
@@ -122,3 +146,5 @@ def editarProducto(request, producto_id):
     }
 
     return render(request, 'editar_producto.html', context)
+
+

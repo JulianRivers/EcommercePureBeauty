@@ -1,7 +1,7 @@
 from django import forms
 
 from django import forms
-from .models import (Producto, ProductoSubcategoria)
+from .models import (Producto, ProductoSubcategoria, Categoria)
 
 
 class ProductoForm(forms.ModelForm):
@@ -16,3 +16,11 @@ class ProductoSubcategoriaForm(forms.ModelForm):
         labels = {
             'subcategoria': 'Categoria',
             }
+        
+class CategoriaPadreForm(forms.ModelForm):
+    class Meta:
+        model = Categoria
+        fields = ['nombre']
+        labels = {
+            'nombre': 'Nombre',
+        }
