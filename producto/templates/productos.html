@@ -53,7 +53,7 @@
             <td>{{ producto.nombre }}</td>
             <td>{{ producto.stock }}</td>
             <td>
-                <a href="producto/editar/{{producto.id}}">
+                <a href="#">
                     <div class="container">
                         <div class="row">
                             {{ producto.precio_desc }}✎
@@ -61,7 +61,7 @@
                     </div>
                 </a>
             </td>
-            <td><a href="#">{{ producto.categoria }}</a></td>
+            <td><a href="#"class="btn btn-primary">{{ producto.categoria }}</a></td>
             <td>${{producto.precio_act|floatformat:0|intcomma}}</td>
             <td>
                 <div class="container">
@@ -76,14 +76,17 @@
                                 <button class="btn btn-outline-dark btn-block" onclick="abrirModalDetalle()">👁</button>
                             </a>
                         </div>
-                        <a href="producto/editar/{{producto.id}}">
-                            <div class="col-4">
-                                <button class="btn btn-outline-dark btn-block">✎</button>
-                            </div>
-                        </a>
+                        <div class="col-4">
+                            <a href="producto/editar/{{producto.id}}">
+                                <div>
+                                    <button class="btn btn-outline-dark btn-block">✎</button>
+                                </div>
+                            </a>
+    
+                        </div>
                     </div>
                 </div>
-            </td>
+            </td>   
         </tr>
         {% endfor %}
     </tbody>

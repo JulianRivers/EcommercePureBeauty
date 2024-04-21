@@ -102,7 +102,8 @@
 
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-outline-dark">Añadir</button>
-                    <button type="button" class="btn btn-outline-dark" onclick="cerrarModal()">Cerrar</button>
+                    <a href="/producto" class="btn btn-outline-dark">Cerrara</a>
+                    
                 </div>
             </form>
         </div>
@@ -126,19 +127,18 @@
                 <img src="{{ detalle.imagen.url }}" alt="{{ detalle.nombre }}" class="img-fluid"
                     style="max-width: 300px; max-height: 200px;"">
             </div>
+                <form method=" POST" action="{% url 'producto:add' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form_producto|crispy }}
+                <br>
+                {{ form_subcategoria|crispy }}
 
-           
-            <h4>Precio: </h4>
-            <p>${{ detalle.precio_act|floatformat:0|intcomma }}</p>
-            <h4>Cantidad: </h4>
-            <p>{{ detalle.stock }}</p>
-            <h4>Descripción: </h4>
-            <p>{{ detalle.descripcion }}</p>
-        </div>
-        <div class=" modal-footer">
-                <a href="{% url 'producto:inicio' %}">
-                    <button type="button" class="btn btn-outline-dark" onclick="cerrarModalDetalle()">Cerrar</button>
-                </a>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-outline-dark">Editar</button>
+                    <a href="/productos" class="btn btn-outline-dark">Cerrar</a>
+                </div>
+                </form>
+
             </div>
         </div>
     </div>
