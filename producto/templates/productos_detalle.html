@@ -134,8 +134,12 @@
             <p>{{ detalle.stock }}</p>
             <h4>Descripción: </h4>
             <p>{{ detalle.descripcion }}</p>
-        </div>
-        <div class=" modal-footer">
+            {% for categoria in categorias %}
+            <a href=" #" class="btn btn-primary">{{ categoria }}</a>
+                {% endfor %}
+
+            </div>
+            <div class=" modal-footer">
                 <a href="{% url 'producto:inicio' %}">
                     <button type="button" class="btn btn-outline-dark" onclick="cerrarModalDetalle()">Cerrar</button>
                 </a>

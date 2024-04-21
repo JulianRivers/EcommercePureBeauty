@@ -8,6 +8,7 @@ from .models import (UserProfile, Carrito)
 from producto.models import ProductoEnCarrito
 from pedido.models import Pedido, DetallePedido
 from .forms import (LoginForm, RegistroForm)
+from producto.models import Producto
 
 def loginView(request):
     if request.user.is_superuser:
@@ -32,7 +33,16 @@ def loginView(request):
 
 
 def index(request):
-    return render(request, 'index.html')
+    # Obtener todos los productos activos
+    productos = Producto.objects.filter(is_activo=True)
+
+    # Pasar los productos al contexto del template
+    context = {
+        'productos': productos
+    }
+
+    # Renderizar el template con los productos
+    return render(request, 'index.html', context)
 
 def logoutView(request):
     logout(request)
@@ -113,4 +123,3 @@ def pedidos_cliente(request, cliente_id):
         detalles_pedidos = []
 
     return render(request, 'pedidos_cliente.html', {'detalles_pedidos': detalles_pedidos, 'cliente': cliente})
-

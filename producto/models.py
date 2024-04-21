@@ -21,34 +21,13 @@ class Producto (models.Model):
         '''Representación en un String del producto'''
         return f"Producto: {self.nombre}"
 
-
-class Categoria(models.Model):
-    ''' Modelo que respresenta las categorías generales de los productos'''
-    nombre = models.CharField('Nombre', max_length=100)
-    categoria_padre = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='categorias_hijas')
-
-
-    def __str__(self):
-        '''Representación en un String de la Categoria'''
-        return self.get_nombre_completo()
-
-    def get_nombre_completo(self):
-        if self.categoria_padre:
-            # Si tiene una categoría padre, llamamos recursivamente al método get_nombre_completo
-            return f"{self.categoria_padre.get_nombre_completo()} > {self.nombre}"
-        else:
-            # Si no tiene una categoría padre, retorna solo el nombre
-            return self.nombre
-
-
 class Subcategoria(models.Model):
     ''' Modelo que respresenta las categorias particulares/individuales de los productos'''
     nombre = models.CharField('Nombre', max_length=100)
-    categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE)
 
     def __str__(self):
         '''Representación en un String de la subcategoria'''
-        return f"{self.categoria} > {self.nombre}"
+        return f"{self.nombre}"
     
 
 

@@ -3,44 +3,9 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 
-from .models import (Producto, ProductoSubcategoria, Subcategoria, Categoria)
-from .forms import (CategoriaPadreForm, ProductoForm, ProductoSubcategoriaForm)
+from .models import (Producto, ProductoSubcategoria)
+from .forms import (ProductoForm, ProductoSubcategoriaForm)
 # Create your views here.
-
-def categoria(request):
-    subcategorias = Subcategoria.objects.all()
-    categorias_padre = Categoria.objects.all()
-    categorias_sin_padre = Categoria.objects.filter(categoria_padre__isnull=True)
-    #categorias_padre = Categoria.objects.filter(categoria_padre__isnull=False)
-
-    context = {
-        'subcategorias': subcategorias,
-        'categorias': categorias_padre,
-        'categorias_padre':categorias_sin_padre
-    }
-    return render(request, 'categorias.html', context)
-
-def agregar_categoria(request):
-    if request.method == 'POST':
-        form = CategoriaPadreForm(request.POST)
-        print('unu')
-        if form.is_valid():
-            print('holaaaaaaaaa')
-            form.save()
-    else:
-        form = CategoriaPadreForm()
-    
-    subcategorias = Subcategoria.objects.all()
-    categorias_padre = Categoria.objects.all()
-    categorias_sin_padre = Categoria.objects.filter(categoria_padre__isnull=True)
-
-    context = {
-        'form_cat_padre':form,
-        'subcategorias': subcategorias,
-        'categorias': categorias_padre,
-        'categorias_padre':categorias_sin_padre
-    }
-    return render(request, 'categorias.html', context)
 
 def inicio(request):
     productos = Producto.objects.all()
@@ -49,7 +14,7 @@ def inicio(request):
         if producto.precio_desc == producto.precio_act:
             producto.precio_desc = 0
         try:
-            productoSubcategoria = ProductoSubcategoria.objects.get(producto=producto)
+            productoSubcategoria = ProductoSubcategoria.objects.filter(producto=producto).first()
             producto.categoria = productoSubcategoria.subcategoria
         except ProductoSubcategoria.DoesNotExist:
             producto.categoria = 'Sin categoría'
@@ -89,21 +54,20 @@ def addProducto(request):
 def detalleProducto(request, id):
     productos = Producto.objects.all()
     detalle = get_object_or_404(Producto, id=id)
-    print(detalle.nombre)
+
     for producto in productos:
         if producto.precio_desc == producto.precio_act:
             producto.precio_desc = 0
         try:
-            productoSubcategoria = ProductoSubcategoria.objects.get(producto=producto)
-            producto.categoria = productoSubcategoria.subcategoria
+            productoSubcategorias = ProductoSubcategoria.objects.filter(producto=detalle)
+            categorias = [subcategoria.subcategoria for subcategoria in productoSubcategorias]
         except ProductoSubcategoria.DoesNotExist:
-            producto.categoria = 'Sin categoría'
-            
+             categorias = ['Sin categoría']
+    print(categorias)
     context = {
         'productos': productos,
         'detalle': detalle,
-        'form_producto':ProductoForm(), 
-        'form_subcategoria': ProductoSubcategoriaForm(),
+        'categorias': categorias
     }
     return render(request, 'productos_detalle.html', context)
 
@@ -112,10 +76,10 @@ def deleteProducto(request, id):
     producto.delete()
     return redirect('producto:inicio')
 
-def editarProducto(request, producto_id):
+def editarProducto(request, id):
     # Obtén el producto por ID
-    producto = get_object_or_404(Producto, id=producto_id)
-
+    producto = get_object_or_404(Producto, id=id)
+    productos = Producto.objects.all()
     if request.method == 'POST':
         # Llena los formularios con los datos existentes del producto
         form_producto = ProductoForm(request.POST, request.FILES, instance=producto)
@@ -141,10 +105,10 @@ def editarProducto(request, producto_id):
 
     # Llena los formularios con los datos existentes del producto
     context = {
+        'productos': productos,
+        'detalle': producto,
         'form_producto' : ProductoForm(instance=producto),
         'form_subcategoria' : ProductoSubcategoriaForm(),
     }
 
-    return render(request, 'editar_producto.html', context)
-
-
+    return render(request, 'productos_editar.html', context)
