@@ -2,6 +2,7 @@
 {% extends 'dashboard.html' %}
 {% load crispy_forms_tags %}
 {% load static %}
+{% load humanize %}
 
 {% block content %}
 <div class="container">
@@ -22,15 +23,15 @@
                     <div class="card-body">
                         <h5 class="card-title">{{ producto_en_carrito.producto.nombre }}</h5>
                         <p class="card-text">Cantidad: {{ producto_en_carrito.cantidad }}</p>
-                        <p class="card-text">Precio: {{ producto_en_carrito.precio }}</p>
-                        <p class="card-text">Precio Total: {{ producto_en_carrito.precio_total }}</p> <!-- Mostrar precio total -->
+                        <p class="card-text">Precio: {{ producto_en_carrito.precio|floatformat:0|intcomma }}</p>
+                        <p class="card-text">Precio Total: {{ producto_en_carrito.precio_total|floatformat:0|intcomma }}</p> <!-- Mostrar precio total -->
                     </div>
                 </div>
             </div>
             {% endfor %}
         </div>
         <br>
-        <p>Total de la compra: {{ total_compra }}</p> <!-- Mostrar total de la compra -->
+        <p>Total de la compra: {{ total_compra|floatformat:0|intcomma }}</p> <!-- Mostrar total de la compra -->
         {% else %}
         <h1>Carrito de Compra Vacío</h1>
         <div class="container">

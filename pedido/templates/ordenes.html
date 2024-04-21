@@ -1,6 +1,7 @@
 {% extends 'dashboard.html' %}
 {% load crispy_forms_tags %}
 {% load static %}
+{% load humanize %}
 
 {% block content %}
 <div class="container">
@@ -27,7 +28,7 @@
             <td>{{ orden.fecha|date:"d/m/Y" }}</td>
             <td>{{ orden.fecha_de_envio|date:"d/m/Y" }}</td>
             <td>{{ orden.estado_pedido }}</td>
-            <td>{{ orden.total_compra }}</td>
+            <td>{{ orden.total_compra|floatformat:0|intcomma }}</td>
             <td>
                 <div class="container">
                     <div class="row">
