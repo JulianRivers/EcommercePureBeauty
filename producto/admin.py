@@ -1,13 +1,6 @@
 from django.contrib import admin
 
-from .models import (Categoria, Producto, ProductoEnCarrito, ProductoSubcategoria, Subcategoria)
-
-@admin.register(Categoria)
-class CategoriaAdmin(admin.ModelAdmin):
-    # list_display=('id', 'nombre')
-    # list_filter=('nombre',) 
-    ordering=('-nombre',)
-    search_fields=('nombre',)
+from .models import (Producto, ProductoEnCarrito, ProductoSubcategoria, Subcategoria)
 
 @admin.register(Subcategoria)
 class SubcategoriaAdmin(admin.ModelAdmin):
