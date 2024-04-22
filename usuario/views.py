@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 
 from django.shortcuts import render, redirect
 from django.contrib.auth import (login, logout)
@@ -34,15 +34,20 @@ def loginView(request):
 
 def index(request):
     # Obtener todos los productos activos
-    productos = Producto.objects.filter(is_activo=True)
+    productos_todos = Producto.objects.filter(is_activo=True)
+
+    # Obtener los primeros 5 productos con la fecha de actualización más reciente
+    productos_recientes = Producto.objects.filter(is_activo=True).order_by('-ult_actualizacion')[:5]
 
     # Pasar los productos al contexto del template
     context = {
-        'productos': productos
+        'productos_todos': productos_todos,
+        'productos_recientes': productos_recientes
     }
 
     # Renderizar el template con los productos
     return render(request, 'index.html', context)
+
 
 def logoutView(request):
     logout(request)
@@ -123,3 +128,15 @@ def pedidos_cliente(request, cliente_id):
         detalles_pedidos = []
 
     return render(request, 'pedidos_cliente.html', {'detalles_pedidos': detalles_pedidos, 'cliente': cliente})
+
+def detalle_producto(request, producto_id):
+    # Buscar el producto por su ID
+    producto = get_object_or_404(Producto, pk=producto_id)
+
+    # Pasar el producto al contexto
+    context = {
+        'producto': producto
+    }
+
+    # Renderizar la plantilla detalle_producto.html con el producto
+    return render(request, 'detalle_producto.html', context)

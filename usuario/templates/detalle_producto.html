@@ -89,57 +89,36 @@ Pure Beauty
   </div>
 </nav>
 
-
-  
-  <!-- Navbar -->
-  <!-- Jumbotron -->
-  <div class="text-white py-5" style="background-color: #d7716a;">
-    <div class="container py-5">
-      <h1>
-        Los mejores productos y <br />
-        Marcas en nuestra tienda
-      </h1>
-      <p>
-        Productos de moda, precios de fábrica, servicio excelente
-      </p>
-      <button type="button" class="btn btn-outline-light">
-        Saber más
-      </button>
-      <button type="button" class="btn btn-light shadow-0 text-primary pt-2 border border-white">
-        <span class="pt-1" style="color: #8d2121;">Comprar ahora </span>
-      </button>
-    </div>
-  </div>
-  <!-- Jumbotron -->
 </header>
 <!-- Products -->
 <section>
-  <div class="container my-5">
-    <header class="mb-4">
-      <h3>Productos nuevos</h3>
-    </header>
-
-    <div class="row">
-      <!-- Iteración sobre los productos recientes -->
-      {% for product in productos_recientes %}
-      <div class="col-lg-3 col-md-6 col-sm-5 d-flex">
-        <div class="card w-100 my-2 shadow-2-strong">
-          <a href="{% url 'usuario:detalle_producto' product.id %}">
-            <img src="{{ product.imagen.url }}" class="card-img-top" style="aspect-ratio: 1 / 1" />
-          </a>
-          <div class="card-body d-flex flex-column">
-            <h5 class="card-title">{{ product.nombre }}</h5>
-            <p class="card-text">{{ product.precio_act }}</p>
-            <a href="#!" class="btn btn-light border px-2 pt-2 icon-hover"><i
-              class="fas fa-heart fa-lg text-secondary px-1"></i></a>
-          </div>
+    <div class="container my-5">
+      <header class="mb-4">
+        <h3>Detalle del Producto</h3>
+      </header>
+  
+      <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-6">
+          <img src="{{ producto.imagen.url }}" class="img-fluid" alt="{{ producto.nombre }}">
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6">
+          <h2>{{ producto.nombre }}</h2>
+          <p>{{ producto.descripcion }}</p>
+          <a href="#!" class="btn btn-light border px-2 pt-2 icon-hover"><i
+            class="fas fa-heart fa-lg text-secondary px-1"></i></a>
+          <p><strong>Precio:</strong> {{ producto.precio_act }}</p>
+          <form action="" method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+              <label for="cantidad" class="form-label">Cantidad:</label>
+              <input type="number" class="form-control" id="cantidad" name="cantidad" value="1" min="1">
+            </div>
+            <button type="submit" class="btn btn-rosado">Agregar al carrito</button>
+          </form>
         </div>
       </div>
-      {% endfor %}
-      <!-- Fin de la iteración -->
     </div>
-  </div>
-</section>
+  </section>
 <!-- Products -->
 
 <!-- Feature -->
