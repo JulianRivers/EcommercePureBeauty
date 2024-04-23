@@ -6,6 +6,7 @@ from . import views
 app_name="usuario"
 urlpatterns = [
     path('',views.index, name='index'),
+    # path('',views.listar_subcategorias, name='index'),
     path('login',views.loginView, name='login'),
     path('logout', views.logoutView, name="logout"),
     path('registro', views.registerView, name='registro'),
@@ -13,4 +14,5 @@ urlpatterns = [
     path('carrito/<int:cliente_id>/', views.carrito_compras, name='carritoDeCompras'),
     path('pedidos/<int:cliente_id>/', views.pedidos_cliente, name='pedidos_cliente'),
     path('detalle_producto/<int:producto_id>/', views.detalle_producto, name='detalle_producto'),
+    path('nuevos',views.nuevos, name='nuevos'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

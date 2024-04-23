@@ -1,14 +1,12 @@
 from django.shortcuts import get_object_or_404, render
-
 from django.shortcuts import render, redirect
 from django.contrib.auth import (login, logout)
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from .models import (UserProfile, Carrito)
-from producto.models import ProductoEnCarrito
+from producto.models import (ProductoEnCarrito, Producto, Subcategoria)
 from pedido.models import Pedido, DetallePedido
 from .forms import (LoginForm, RegistroForm)
-from producto.models import Producto
 
 def loginView(request):
     if request.user.is_superuser:
@@ -37,7 +35,7 @@ def index(request):
     productos_todos = Producto.objects.filter(is_activo=True)
 
     # Obtener los primeros 5 productos con la fecha de actualización más reciente
-    productos_recientes = Producto.objects.filter(is_activo=True).order_by('-ult_actualizacion')[:5]
+    productos_recientes = Producto.objects.filter(is_activo=True).order_by('-ult_actualizacion')[:8]
 
     # Pasar los productos al contexto del template
     context = {
@@ -129,14 +127,34 @@ def pedidos_cliente(request, cliente_id):
 
     return render(request, 'pedidos_cliente.html', {'detalles_pedidos': detalles_pedidos, 'cliente': cliente})
 
+# metodo para mostrar el detalle de un producto
 def detalle_producto(request, producto_id):
-    # Buscar el producto por su ID
     producto = get_object_or_404(Producto, pk=producto_id)
-
-    # Pasar el producto al contexto
+    cantidades = range(1, producto.stock + 1)
     context = {
-        'producto': producto
+        'producto': producto,
+        'cantidades': cantidades,
     }
-
-    # Renderizar la plantilla detalle_producto.html con el producto
     return render(request, 'detalle_producto.html', context)
+
+
+def nuevos(request):
+    # Obtener los primeros 8 productos con la fecha de actualización más reciente
+    productos_recientes = Producto.objects.filter(is_activo=True).order_by('-ult_actualizacion')[:8]
+    # Pasar los productos al contexto del template
+    context = {
+        'productos_recientes': productos_recientes
+    }
+    # Renderizar el template con los productos
+    return render(request, 'nuevos.html', context)
+
+
+def listar_subcategorias(request):
+    # Recupera todas las subcategorías
+    subcategorias = Subcategoria.objects.all()
+    # Pasa las subcategorías al contexto de la plantilla
+    context = {
+        'subcategorias': subcategorias
+    }
+    # Renderiza la plantilla con las subcategorías en el contexto
+    return render(request, 'encabezado.html', context)
