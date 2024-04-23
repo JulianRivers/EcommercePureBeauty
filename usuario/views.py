@@ -36,12 +36,14 @@ def index(request):
 
     # Obtener los primeros 5 productos con la fecha de actualización más reciente
     productos_recientes = Producto.objects.filter(is_activo=True).order_by('-ult_actualizacion')[:8]
-
+    
     # Pasar los productos al contexto del template
     context = {
         'productos_todos': productos_todos,
-        'productos_recientes': productos_recientes
+        'productos_recientes': productos_recientes,
     }
+    
+    context.update(subcategorias(request))
 
     # Renderizar el template con los productos
     return render(request, 'index.html', context)
@@ -149,12 +151,8 @@ def nuevos(request):
     return render(request, 'nuevos.html', context)
 
 
-def listar_subcategorias(request):
-    # Recupera todas las subcategorías
+def subcategorias(request):
+    # Obtener todas las subcategorías
     subcategorias = Subcategoria.objects.all()
-    # Pasa las subcategorías al contexto de la plantilla
-    context = {
-        'subcategorias': subcategorias
-    }
-    # Renderiza la plantilla con las subcategorías en el contexto
-    return render(request, 'encabezado.html', context)
+    # Retornarlas en un diccionario para que estén disponibles en el contexto de todas las plantillas
+    return {'subcategorias': subcategorias}

@@ -57,11 +57,9 @@
                             Categorias
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="#">Cabello</a>
-                            <a class="dropdown-item" href="#">Maquillaje</a>
-                            <a class="dropdown-item" href="#">Marcas</a>
-                            <a class="dropdown-item" href="#">Skincare</a>
-                            <a class="dropdown-item" href="#">Kits</a>
+                            {% for subcategoria in subcategorias %}
+                            <a class="dropdown-item" href="#">{{ subcategoria.nombre }}</a>
+                            {% endfor %}
                         </div>
                     </li>
                     <li class="nav-item">
