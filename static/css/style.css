@@ -98,3 +98,14 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     margin: auto;
 }
+
+.btn-rosado {
+    background-color: #d7716a;
+    border-color: #d7716a;
+    color: white; /* Color del texto */
+}
+
+.btn-rosado:hover {
+    background-color: #b05c56; /* Cambia el color de fondo al pasar el cursor */
+    border-color: #b05c56; /* Cambia el color del borde al pasar el cursor */
+}

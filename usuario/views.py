@@ -1,14 +1,12 @@
-from django.shortcuts import render
-
+from django.shortcuts import get_object_or_404, render
 from django.shortcuts import render, redirect
 from django.contrib.auth import (login, logout)
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from .models import (UserProfile, Carrito)
-from producto.models import ProductoEnCarrito
+from producto.models import (ProductoEnCarrito, Producto, Subcategoria)
 from pedido.models import Pedido, DetallePedido
 from .forms import (LoginForm, RegistroForm)
-from producto.models import Producto
 
 def loginView(request):
     if request.user.is_superuser:
@@ -34,15 +32,22 @@ def loginView(request):
 
 def index(request):
     # Obtener todos los productos activos
-    productos = Producto.objects.filter(is_activo=True)
+    productos_todos = Producto.objects.filter(is_activo=True)
 
+    # Obtener los primeros 5 productos con la fecha de actualización más reciente
+    productos_recientes = Producto.objects.filter(is_activo=True).order_by('-ult_actualizacion')[:8]
+    
     # Pasar los productos al contexto del template
     context = {
-        'productos': productos
+        'productos_todos': productos_todos,
+        'productos_recientes': productos_recientes,
     }
+    
+    context.update(subcategorias(request))
 
     # Renderizar el template con los productos
     return render(request, 'index.html', context)
+
 
 def logoutView(request):
     logout(request)
@@ -123,3 +128,31 @@ def pedidos_cliente(request, cliente_id):
         detalles_pedidos = []
 
     return render(request, 'pedidos_cliente.html', {'detalles_pedidos': detalles_pedidos, 'cliente': cliente})
+
+# metodo para mostrar el detalle de un producto
+def detalle_producto(request, producto_id):
+    producto = get_object_or_404(Producto, pk=producto_id)
+    cantidades = range(1, producto.stock + 1)
+    context = {
+        'producto': producto,
+        'cantidades': cantidades,
+    }
+    return render(request, 'detalle_producto.html', context)
+
+
+def nuevos(request):
+    # Obtener los primeros 8 productos con la fecha de actualización más reciente
+    productos_recientes = Producto.objects.filter(is_activo=True).order_by('-ult_actualizacion')[:8]
+    # Pasar los productos al contexto del template
+    context = {
+        'productos_recientes': productos_recientes
+    }
+    # Renderizar el template con los productos
+    return render(request, 'nuevos.html', context)
+
+
+def subcategorias(request):
+    # Obtener todas las subcategorías
+    subcategorias = Subcategoria.objects.all()
+    # Retornarlas en un diccionario para que estén disponibles en el contexto de todas las plantillas
+    return {'subcategorias': subcategorias}
