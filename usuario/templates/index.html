@@ -1,4 +1,4 @@
-{% extends 'layouts/base.html' %}
+{% extends 'general/inicio.html' %}
 {% load crispy_forms_tags %}
 {% load static %}
 
@@ -6,16 +6,8 @@
 Pure Beauty
 {% endblock title %}
 
-{% block style %}
-<script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
-<script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
-<script src="https://kit.fontawesome.com/713036b1f5.js" crossorigin="anonymous"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="{% static 'js/animations.js' %}"></script>
-<script src="{% static 'js/ajaxRequest.js' %}"></script>
-{% endblock style %}
   
-{% block body %}
+{% block content %}
 
 <header>
       <!-- Carousel -->
@@ -88,4 +80,4 @@ Pure Beauty
   </div>
 </section>
 <!-- Products -->
-{% endblock body %}
+{% endblock content %}

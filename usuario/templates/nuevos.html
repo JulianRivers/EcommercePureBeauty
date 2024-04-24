@@ -1,4 +1,4 @@
-{% extends 'layouts/base.html' %}
+{% extends 'general/inicio.html' %}
 {% load crispy_forms_tags %}
 {% load static %}
 
@@ -15,7 +15,7 @@ Pure Beauty
 <script src="{% static 'js/ajaxRequest.js' %}"></script>
 {% endblock style %}
   
-{% block body %}
+{% block content %}
 
 <!-- Products -->
 <section>
@@ -47,4 +47,4 @@ Pure Beauty
 </section>
 <!-- Products -->
 
-{% endblock body %}
+{% endblock content %}

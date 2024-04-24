@@ -147,6 +147,9 @@ def nuevos(request):
     context = {
         'productos_recientes': productos_recientes
     }
+    
+    context.update(subcategorias(request))
+    
     # Renderizar el template con los productos
     return render(request, 'nuevos.html', context)
 
