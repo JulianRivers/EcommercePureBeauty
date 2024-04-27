@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import (Producto, ProductoEnCarrito, ProductoSubcategoria, Subcategoria)
+from .models import (ListaDeseo, Producto, ProductoEnCarrito, ProductoSubcategoria, Subcategoria)
 
 @admin.register(Subcategoria)
 class SubcategoriaAdmin(admin.ModelAdmin):
@@ -18,4 +18,6 @@ class ProductoSubcategoriaAdmin(admin.ModelAdmin):
 class ProductoAdmin(admin.ModelAdmin):
     pass
 
-
+@admin.register(ListaDeseo)
+class ListaDeseoAdmin(admin.ModelAdmin):
+    pass

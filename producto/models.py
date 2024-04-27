@@ -1,5 +1,5 @@
 from django.db import models
-from usuario.models import Carrito
+from usuario.models import Carrito, UserProfile
 
 # Modelos de la base de datos relacionados con los productos
 
@@ -50,3 +50,16 @@ class ProductoEnCarrito(models.Model):
         '''Representación en un String de la relación'''
         return f"producto: {self.producto.nombre} cantidad: {self.cantidad} carrito de:{self.carrito.usuario.name}"
 
+class ListaDeseo (models.Model):
+    ''' Modelo que respresenta las categorias particulares/individuales de los productos'''
+    usuario = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
+
+    def __str__(self):
+        '''Representación en un String de la subcategoria'''
+        return f"{self.usuario.name} {self.producto.nombre} "
+    class Meta:
+        '''Clase Meta para agregar restricciones'''
+        # Restricción para que no se repita la combinación usuario-producto
+        unique_together = ['usuario', 'producto']
+    
