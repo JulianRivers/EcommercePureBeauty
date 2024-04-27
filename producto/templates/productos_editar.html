@@ -127,7 +127,7 @@
                 <img src="{{ detalle.imagen.url }}" alt="{{ detalle.nombre }}" class="img-fluid"
                     style="max-width: 300px; max-height: 200px;"">
             </div>
-                <form method=" POST" action="{% url 'producto:add' %}" enctype="multipart/form-data">
+                <form method="POST" action="/producto/editar/{{detalle.id}}" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ form_producto|crispy }}
                 <br>

@@ -17,4 +17,10 @@ class ProductoSubcategoriaForm(forms.ModelForm):
         labels = {
             'subcategoria': 'Categoria',
             }
-         
+        widgets = {
+            'subcategoria': forms.Select(attrs={'class': 'form-control'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(ProductoSubcategoriaForm, self).__init__(*args, **kwargs)
+        self.fields['subcategoria'].required = False
