@@ -6,6 +6,12 @@ COPY requirements.txt .
 
 RUN pip install -r requirements.txt
 
+RUN python manage.py makemigrations
+RUN python manage.py makemigrations pedido
+RUN python manage.py makemigrations usuario
+RUN python manage.py makemigrations producto
+RUN python manage.py migrate
+
 COPY . .
 
 EXPOSE 8000

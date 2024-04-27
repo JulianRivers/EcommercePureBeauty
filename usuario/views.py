@@ -10,7 +10,7 @@ from .forms import (LoginForm, RegistroForm)
 
 def loginView(request):
     if request.user.is_superuser:
-        return redirect('/admin')
+        return redirect('producto:inicio')
     
     if request.method == 'POST':
         email = request.POST['email']
@@ -19,7 +19,7 @@ def loginView(request):
             usuario = UserProfile.objects.get(email=email)
             if usuario is not None and usuario.check_password(password):
                 login(request, usuario)
-                return redirect('/admin') if usuario.is_superuser else redirect('producto:inicio')
+                return redirect('producto:inicio') if usuario.is_superuser else redirect('usuario:index')
             else:
                 messages.error(request, "Contraseña incorrecta")
         except Exception as e:

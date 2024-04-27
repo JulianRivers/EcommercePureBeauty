@@ -17,15 +17,29 @@
                 <!-- Center elements -->
                 <div class="order-lg-last col-lg-10 col-sm-8 col-8">
                     <div class="d-flex justify-content-end"> <!-- Cambiado de float-end a justify-content-end -->
-                        <a href="{% url 'usuario:login' %}" class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center" style="color: #d7716a;">
+                        {% if not user.is_authenticated %}
+                        <a href="{% url 'usuario:login' %}"
+                            class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center"
+                            style="color: #d7716a;">
                             <i class="fas fa-user-alt m-1 me-md-2"></i>
                             <p class="d-none d-md-block mb-0" style="color:#d7716a;">Iniciar Sesión</p>
                         </a>
-                        <a href="{% url 'usuario:login' %}" class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center">
+                        {% else %}
+                        <a href="/perfil"
+                            class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center"
+                            style="color: #d7716a;">
+                            <i class="fas fa-user-alt m-1 me-md-2"></i>
+                            <p class="d-none d-md-block mb-0" style="color:#d7716a;"> {{ user.name }}</p>
+                        </a>
+                        {% endif %}
+
+                        <a href="{% url 'usuario:login' %}"
+                            class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center">
                             <i class="fas fa-heart m-1 me-md-2" style="color: #d7716a;"></i>
                             <p class="d-none d-md-block mb-0" style="color: #d7716a;">Lista de deseos</p>
                         </a>
-                        <a href="{% url 'usuario:login' %}" class="border rounded py-1 px-3 nav-link d-flex align-items-center">
+                        <a href="{% url 'usuario:login' %}"
+                            class="border rounded py-1 px-3 nav-link d-flex align-items-center">
                             <i class="fas fa-shopping-cart m-1 me-md-2" style="color: #d7716a;"></i>
                             <p class="d-none d-md-block mb-0" style="color: #d7716a;">Mi carrito</p>
                         </a>
@@ -40,7 +54,8 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
@@ -53,7 +68,8 @@
                         <a class="nav-link" href="{% url 'usuario:nuevos' %}">Nuevos</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Categorias
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -66,7 +82,7 @@
                         <a class="nav-link" href="#">Ofertas</a>
                     </li>
                 </ul>
-                
+
             </div>
         </div>
     </nav>
