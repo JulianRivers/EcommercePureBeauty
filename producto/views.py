@@ -95,11 +95,10 @@ def editarProducto(request, id):
             producto.ult_actualizacion = timezone.now()
             producto.imagen = request.FILES.get('imagen', producto.imagen)  # Si no se proporciona nueva imagen, usa la existente
             producto.save()
-
-            # Actualiza los datos de la subcategoría
-            producto_subcategoria = form_subcategoria.save(commit=False)
-            producto_subcategoria.producto = producto
-            producto_subcategoria.save()
+            if 'subcategoria' in form_subcategoria.cleaned_data and form_subcategoria.cleaned_data['subcategoria'] is not None:
+                producto_subcategoria = form_subcategoria.save(commit=False)
+                producto_subcategoria.producto = producto
+                producto_subcategoria.save()  
 
             return redirect('producto:inicio')
 
