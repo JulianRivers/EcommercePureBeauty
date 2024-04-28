@@ -6,8 +6,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from .models import (UserProfile, Carrito)
 from producto.models import (ProductoEnCarrito, Producto, Subcategoria)
 from pedido.models import Pedido, DetallePedido
-from .forms import (LoginForm, RegistroForm)
-
+from .forms import (LoginForm, RegistroForm, UsuarioForm, CambiarPasswordForm)
+from django.http import HttpResponseRedirect
 def loginView(request):
     if request.user.is_superuser:
         return redirect('producto:inicio')
@@ -154,9 +154,41 @@ def nuevos(request):
     return render(request, 'nuevos.html', context)
 
 def perfil(request):
+    usuario = request.user
+    form = UsuarioForm(instance=usuario)
+    form1 = CambiarPasswordForm()
 
     context = {
-        
+        "form": form,
+        "form1": form1
+    }
+    
+    
+    context.update(subcategorias(request))
+    
+    # Renderizar el template con los productos
+    return render(request, 'perfil.html', context)
+
+def editar_datos(request):
+    usuario = request.user
+    form1 = CambiarPasswordForm()
+
+    if request.method == 'POST':
+        form = UsuarioForm(request.POST, instance=usuario)
+       
+        if form.is_valid():
+            password = request.POST.get('password')
+            usuario = form.save()
+            
+            messages.success(request, 'El usuario fue actualizado correctamente')
+            return redirect('usuario:login')
+
+    else:
+        form = UsuarioForm(instance=usuario)
+
+    context = {
+        "form": form,
+        "form1": form1
     }
     
     context.update(subcategorias(request))
@@ -164,6 +196,28 @@ def perfil(request):
     # Renderizar el template con los productos
     return render(request, 'perfil.html', context)
 
+def change_password(request):
+    usuario = request.user
+
+    form = UsuarioForm(instance=usuario)
+    if request.method == 'POST':
+        form1 = CambiarPasswordForm(request.POST)
+        if form1.is_valid():
+            usuario.set_password(form1.cleaned_data['password'])
+            usuario.save()
+            messages.success(request, 'Contraseña actualizada correctamente')
+            return redirect('usuario:login')
+    else:
+        form1 = CambiarPasswordForm()
+
+    context = {
+        "form": form,
+        "form1": form1
+    }
+    context.update(subcategorias(request))
+    
+    # Renderizar el template con los productos
+    return render(request, 'perfil.html', context)
 
 def subcategorias(request):
     # Obtener todas las subcategorías

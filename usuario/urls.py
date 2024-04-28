@@ -15,4 +15,6 @@ urlpatterns = [
     path('detalle_producto/<int:producto_id>/', views.detalle_producto, name='detalle_producto'),
     path('nuevos',views.nuevos, name='nuevos'),
     path('perfil',views.perfil, name='perfil'),
+    path('perfil/datos',views.editar_datos, name='datos'),
+    path('perfil/password',views.change_password, name='change'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

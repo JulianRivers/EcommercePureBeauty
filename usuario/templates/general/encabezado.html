@@ -8,7 +8,7 @@
             <div class="row gy-3">
                 <!-- Left elements -->
                 <div class="col-lg-2 col-sm-4 col-4">
-                    <a href="https://mdbootstrap.com/" target="_blank" class="float-start">
+                    <a href="/"class="float-start">
                         <img src="{% static '/images/logo.jpg' %}" height="60" />
                     </a>
                 </div>
@@ -25,8 +25,7 @@
                             <p class="d-none d-md-block mb-0" style="color:#d7716a;">Iniciar Sesión</p>
                         </a>
                         {% else %}
-                        <a href="/perfil"
-                            class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center"
+                        <a href="/perfil" class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center"
                             style="color: #d7716a;">
                             <i class="fas fa-user-alt m-1 me-md-2"></i>
                             <p class="d-none d-md-block mb-0" style="color:#d7716a;"> {{ user.name }}</p>
@@ -43,6 +42,13 @@
                             <i class="fas fa-shopping-cart m-1 me-md-2" style="color: #d7716a;"></i>
                             <p class="d-none d-md-block mb-0" style="color: #d7716a;">Mi carrito</p>
                         </a>
+                        {% if user.is_authenticated %}
+                        <a href="{% url 'usuario:logout' %}"
+                            class="border rounded py-1 px-3 nav-link d-flex align-items-center">
+                            <i class="fas fa-sign-out-alt m-1 me-md-2" style="color: #d7716a;"></i>
+                            <p class="d-none d-md-block mb-0" style="color: #d7716a;">Cerrar Sesión</p>
+                        </a>
+                        {% endif %}
                     </div>
                 </div>
 
