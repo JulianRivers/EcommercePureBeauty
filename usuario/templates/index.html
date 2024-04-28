@@ -47,8 +47,6 @@ Pure Beauty
 
 </div>
 
-
-
 <!-- Carousel -->
 </header>
 <!-- Products -->
@@ -69,8 +67,10 @@ Pure Beauty
           <div class="card-body d-flex flex-column">
             <h5 class="card-title">{{ product.nombre }}</h5>
             <p class="card-text">{{ product.precio_act }}</p>
-            <a href="#!" class="btn btn-light border px-2 pt-2 icon-hover"><i
-              class="fas fa-heart fa-lg text-secondary px-1"></i></a>
+            <a href="#!" class="btn btn-light border px-2 pt-2 icon-hover add-to-wishlist"
+              data-product-id="{{ product.id }}">
+              <i class="fas fa-heart fa-lg px-1" style="color: rgb(105, 105, 105);"></i>
+            </a>
           </div>
         </div>
       </div>
@@ -80,4 +80,37 @@ Pure Beauty
   </div>
 </section>
 <!-- Products -->
+
+<script>
+  $(document).ready(function () {
+    // Función para manejar el evento de clic en el botón de la lista de deseos
+    $('.add-to-wishlist').on('click', function (e) {
+      e.preventDefault();
+      var productId = $(this).data('product-id');
+      var btn = $(this); // Guardamos una referencia al botón
+  
+      // Realizar una solicitud AJAX para agregar o quitar el producto de la lista de deseos
+      $.ajax({
+        type: 'GET',
+        url: '/agregar-a-lista-deseos/' + productId + '/',
+        success: function (response) {
+          if (!response.success) {
+            alert(response.message);
+          } else {
+            // Mostrar mensaje de éxito si es necesario
+            if (response.success) {
+              $('#success-message').text(response.message).show();
+            }
+          }
+        },
+        error: function (xhr, status, error) {
+          console.error(error);
+        }
+      });
+    });
+  });
+</script>
+
+<div id="success-message" style="display: none; padding: 10px; background-color: #d4edda; border-color: #c3e6cb;
+  color: #155724; margin-bottom: 15px; border-radius: .25rem; border: 1px solid transparent;"></div>
 {% endblock content %}

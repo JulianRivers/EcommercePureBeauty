@@ -2,9 +2,9 @@ from django.shortcuts import get_object_or_404, render
 from django.shortcuts import render, redirect
 from django.contrib.auth import (login, logout)
 from django.contrib import messages
-from django.core.exceptions import ObjectDoesNotExist
+from django.http import JsonResponse
 from .models import (UserProfile, Carrito)
-from producto.models import (ProductoEnCarrito, Producto, Subcategoria)
+from producto.models import (ProductoEnCarrito, Producto, Subcategoria, ListaDeseo)
 from pedido.models import Pedido, DetallePedido
 from .forms import (LoginForm, RegistroForm, UsuarioForm, CambiarPasswordForm)
 from django.http import HttpResponseRedirect
@@ -37,10 +37,27 @@ def index(request):
     # Obtener los primeros 5 productos con la fecha de actualización más reciente
     productos_recientes = Producto.objects.filter(is_activo=True).order_by('-ult_actualizacion')[:8]
     
+    # Obtener el usuario actual
+    usuario_actual = request.user
+    
+    # Crear un diccionario para almacenar los estados de la lista de deseos de cada producto
+    estado_lista_deseos = {}
+    
+    # Verificar si el usuario está autenticado
+    if usuario_actual.is_authenticated:
+        # Obtener todos los productos en la lista de deseos del usuario
+        productos_lista_deseos = ListaDeseo.objects.filter(usuario=usuario_actual)
+        
+        # Iterar sobre los productos en la lista de deseos
+        for producto_lista_deseos in productos_lista_deseos:
+            # Almacenar el estado de la lista de deseos para cada producto
+            estado_lista_deseos[producto_lista_deseos.producto.id] = True
+    
     # Pasar los productos al contexto del template
     context = {
         'productos_todos': productos_todos,
         'productos_recientes': productos_recientes,
+        'estado_lista_deseos': estado_lista_deseos,
     }
     
     context.update(subcategorias(request))
@@ -224,3 +241,45 @@ def subcategorias(request):
     subcategorias = Subcategoria.objects.all()
     # Retornarlas en un diccionario para que estén disponibles en el contexto de todas las plantillas
     return {'subcategorias': subcategorias}
+
+def productos_por_subcategoria(request, subcategoria_id):
+    subcategoria = get_object_or_404(Subcategoria, pk=subcategoria_id)
+    productos = Producto.objects.filter(productosubcategoria__subcategoria=subcategoria)
+    context = {
+        'subcategoria': subcategoria,
+        'productos': productos,
+    }
+    context.update(subcategorias(request))
+    return render(request, 'productos_categorias.html', context)
+
+
+def agregar_a_lista_deseos(request, producto_id):
+    producto = get_object_or_404(Producto, pk=producto_id)
+    usuario = request.user
+
+    # Verificar si el producto ya está en la lista de deseos del usuario
+    en_lista_deseos = ListaDeseo.objects.filter(usuario=usuario, producto=producto).exists()
+
+    if en_lista_deseos:
+        # Si el producto ya está en la lista de deseos, lo eliminamos
+        ListaDeseo.objects.filter(usuario=usuario, producto=producto).delete()
+        message = f"{producto.nombre} se ha eliminado de tu lista de deseos."
+    else:
+        # Si el producto no está en la lista de deseos, lo agregamos
+        ListaDeseo.objects.create(usuario=usuario, producto=producto)
+        message = f"{producto.nombre} se ha agregado a tu lista de deseos."
+
+    return JsonResponse({'success': True, 'message': message})
+
+def verificar_lista_deseos(request, producto_id):
+    producto = get_object_or_404(Producto, pk=producto_id)
+    usuario = request.user
+    en_lista_deseos = ListaDeseo.objects.filter(usuario=usuario, producto=producto).exists()
+    return JsonResponse({'in_wishlist': en_lista_deseos})
+
+def lista_deseos(request):
+    usuario = request.user
+    
+    productos_en_lista = ListaDeseo.objects.filter(usuario=usuario).select_related('producto')
+    return render(request, 'lista_deseos.html', {'productos_en_lista': productos_en_lista})
+   

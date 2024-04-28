@@ -32,7 +32,7 @@
                         </a>
                         {% endif %}
 
-                        <a href="{% url 'usuario:login' %}"
+                        <a href="{% url 'usuario:lista_deseos' %}"
                             class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center">
                             <i class="fas fa-heart m-1 me-md-2" style="color: #d7716a;"></i>
                             <p class="d-none d-md-block mb-0" style="color: #d7716a;">Lista de deseos</p>
@@ -80,7 +80,7 @@
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             {% for subcategoria in subcategorias %}
-                            <a class="dropdown-item" href="#">{{ subcategoria.nombre }}</a>
+                            <a class="dropdown-item" href="{% url 'usuario:productos_por_subcategoria' subcategoria.id %}">{{ subcategoria.nombre }}</a>
                             {% endfor %}
                         </div>
                     </li>
