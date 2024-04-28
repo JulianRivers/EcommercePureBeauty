@@ -43,7 +43,7 @@ def index(request):
     
     # Crear un diccionario para almacenar los estados de la lista de deseos de cada producto
     estado_lista_deseos = {}
-    
+    lista = productos_recientes
     # Verificar si el usuario está autenticado
     if usuario_actual.is_authenticated:
         # Obtener todos los productos en la lista de deseos del usuario
@@ -57,7 +57,7 @@ def index(request):
     context = {
         'productos_todos': productos_todos,
         'productos_recientes': lista,
-        'estado_lista_deseos': productos_lista_deseos,
+        
     }
     
     context.update(subcategorias(request))
