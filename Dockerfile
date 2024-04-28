@@ -11,7 +11,7 @@ RUN python manage.py makemigrations pedido
 RUN python manage.py makemigrations usuario
 RUN python manage.py makemigrations producto
 RUN python manage.py migrate
-
+RUN python manage.py collectstatic --noinput
 COPY . .
 
 EXPOSE 8000
