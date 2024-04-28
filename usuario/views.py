@@ -153,6 +153,17 @@ def nuevos(request):
     # Renderizar el template con los productos
     return render(request, 'nuevos.html', context)
 
+def perfil(request):
+
+    context = {
+        
+    }
+    
+    context.update(subcategorias(request))
+    
+    # Renderizar el template con los productos
+    return render(request, 'perfil.html', context)
+
 
 def subcategorias(request):
     # Obtener todas las subcategorías

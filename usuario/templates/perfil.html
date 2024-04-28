@@ -1,0 +1,69 @@
+{% extends 'general/inicio.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}
+Pure Beauty
+{% endblock title %}
+
+
+{% block content %}
+<br>
+<div class="container-fluid">
+  <div class="row">
+    <!-- Título con barra vertical -->
+    <div class="col-md-6 d-flex align-items-center">
+      <div class="border-end pe-3 me-3">
+        <h2>Información Personal</h2>
+        <p>Direcciones</p>
+      </div>
+      <div class="border-end border-2"></div>
+    </div>
+    <!-- Formulario al lado del título -->
+    <div class="col-md-6" style=" border-left: 2px dashed black;
+    height: 100%;">
+      <form>
+        <div class="mb-3">
+          <label for="exampleInputName" class="form-label">Nombre</label>
+          <input type="text" class="form-control" id="exampleInputName">
+        </div>
+        <div class="mb-3">
+          <label for="exampleInputEmail" class="form-label">Correo electrónico</label>
+          <input type="email" class="form-control" id="exampleInputEmail">
+        </div>
+        <button type="submit" class="btn btn-primary">Enviar</button>
+      </form>
+    </div>
+  </div>
+</div>
+<br>
+<br>
+<div class="container-fluid">
+  <div class="row">
+    <!-- Título con barra vertical -->
+    <div class="col-md-6 d-flex align-items-center">
+      <div class="border-end pe-3 me-3">
+        <h2>Información Personal</h2>
+      </div>
+      <div class="border-end border-2"></div>
+    </div>
+    <!-- Formulario al lado del título -->
+    <div class="col-md-6" style=" border-left: 2px dashed black;
+    height: 100%;">
+      <form>
+        <div class="mb-3">
+          <label for="exampleInputName" class="form-label">Nombre</label>
+          <input type="text" class="form-control" id="exampleInputName">
+        </div>
+        <div class="mb-3">
+          <label for="exampleInputEmail" class="form-label">Correo electrónico</label>
+          <input type="email" class="form-control" id="exampleInputEmail">
+        </div>
+        <button type="submit" class="btn btn-primary">Enviar</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+{% endblock content %}
