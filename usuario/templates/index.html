@@ -67,10 +67,17 @@ Pure Beauty
           <div class="card-body d-flex flex-column">
             <h5 class="card-title">{{ product.nombre }}</h5>
             <p class="card-text">{{ product.precio_act }}</p>
-            <a href="#!" class="btn btn-light border px-2 pt-2 icon-hover add-to-wishlist"
+            {% if product.is_lista %}
+            <a href="/" class="btn btn-light border px-2 pt-2 icon-hover add-to-wishlist"
+              data-product-id="{{ product.id }}">
+              <i class="fas fa-heart fa-lg px-1" style="color: rgb(255, 0, 0);"></i>
+            </a>
+            {% else %}
+            <a href="/" class="btn btn-light border px-2 pt-2 icon-hover add-to-wishlist"
               data-product-id="{{ product.id }}">
               <i class="fas fa-heart fa-lg px-1" style="color: rgb(105, 105, 105);"></i>
             </a>
+            {% endif %}
           </div>
         </div>
       </div>

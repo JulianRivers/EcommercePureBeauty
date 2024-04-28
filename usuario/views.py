@@ -37,6 +37,7 @@ def index(request):
     # Obtener los primeros 5 productos con la fecha de actualización más reciente
     productos_recientes = Producto.objects.filter(is_activo=True).order_by('-ult_actualizacion')[:8]
     
+
     # Obtener el usuario actual
     usuario_actual = request.user
     
@@ -46,18 +47,17 @@ def index(request):
     # Verificar si el usuario está autenticado
     if usuario_actual.is_authenticated:
         # Obtener todos los productos en la lista de deseos del usuario
-        productos_lista_deseos = ListaDeseo.objects.filter(usuario=usuario_actual)
-        
-        # Iterar sobre los productos en la lista de deseos
-        for producto_lista_deseos in productos_lista_deseos:
-            # Almacenar el estado de la lista de deseos para cada producto
-            estado_lista_deseos[producto_lista_deseos.producto.id] = True
-    
+        productos_lista_deseos = ListaDeseo.objects.filter(usuario=usuario_actual)    
+        estado_lista_deseos = [producto.producto.id for producto in productos_lista_deseos]
+        lista = []
+        for producto in productos_recientes:
+            producto.is_lista = producto.id in estado_lista_deseos
+            lista.append(producto)
     # Pasar los productos al contexto del template
     context = {
         'productos_todos': productos_todos,
-        'productos_recientes': productos_recientes,
-        'estado_lista_deseos': estado_lista_deseos,
+        'productos_recientes': lista,
+        'estado_lista_deseos': productos_lista_deseos,
     }
     
     context.update(subcategorias(request))
