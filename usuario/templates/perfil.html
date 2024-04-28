@@ -1,0 +1,68 @@
+{% extends 'general/inicio.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}
+Pure Beauty
+{% endblock title %}
+
+
+{% block content %}
+{% if messages %}
+  <ul class="messages">
+    {% for message in messages %}
+      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+  </ul>
+{% endif %}
+<br>
+<div class="container-fluid">
+  <div class="row">
+    <!-- Título con barra vertical -->
+    <div class="col-md-6 d-flex align-items-center">
+      <div class="border-end pe-3 me-3">
+        <h2>Información Personal</h2>
+        <p>Direcciones</p>
+      </div>
+      <div class="border-end border-2"></div>
+    </div>
+    <!-- Formulario al lado del título -->
+    <div class="col-md-6" style=" border-left: 2px dashed black;
+    height: 100%;">
+      <form method="POST" action="{% url 'usuario:datos' %}">
+        {% csrf_token %}
+        <h2>Información Personal</h2>
+       {{form|crispy}}
+        <button type="submit" class="btn btn-dark">Actualizar datos</button>
+      </form>
+    </div>
+  </div>
+</div>
+<br>
+<br>
+<div class="container-fluid">
+  <div class="row">
+    <!-- Título con barra vertical -->
+    <div class="col-md-6 d-flex align-items-center">
+      <div class="border-end pe-3 me-3">
+        <h2>Cambiar Contraseña</h2>
+        <p>Privacidad</p>
+      </div>
+      <div class="border-end border-2"></div>
+    </div>
+    <!-- Formulario al lado del título -->
+    <div class="col-md-6" style=" border-left: 2px dashed black;
+    height: 100%;">
+      <form method="POST" action="{% url 'usuario:change' %}">
+        {% csrf_token %}
+        <h2>Cambiar Contraseña</h2>
+       {{form1|crispy}}
+        <button type="submit" class="btn btn-dark">Cambiar Contraseña</button>
+      </form>
+    </div>
+  </div>
+</div>
+<br>
+<br><br>
+<br>
+{% endblock content %}

@@ -18,4 +18,7 @@ urlpatterns = [
     path('agregar-a-lista-deseos/<int:producto_id>/', views.agregar_a_lista_deseos, name='agregar_a_lista_deseos'),
     path('verificar-lista-deseos/<int:producto_id>/', views.verificar_lista_deseos, name='verificar_lista_deseos'),
     path('lista-deseos/', views.lista_deseos, name='lista_deseos'),
+    path('perfil',views.perfil, name='perfil'),
+    path('perfil/datos',views.editar_datos, name='datos'),
+    path('perfil/password',views.change_password, name='change'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
