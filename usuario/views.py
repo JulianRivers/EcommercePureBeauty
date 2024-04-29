@@ -7,8 +7,8 @@ from .models import (UserProfile, Carrito)
 from producto.models import (ProductoEnCarrito, Producto, Subcategoria, ListaDeseo)
 from pedido.models import Pedido, DetallePedido
 from .forms import (LoginForm, RegistroForm, UsuarioForm, CambiarPasswordForm)
-from django.http import HttpResponseRedirect
 from django.db.models import F, ExpressionWrapper, DecimalField, Sum
+from decimal import Decimal
 
 
 
@@ -351,8 +351,16 @@ def carrito_compra_cliente(request):
     carrito_items = ProductoEnCarrito.objects.filter(carrito=carrito)
     
     total_pagar = carrito_items.annotate(
-        subtotal=ExpressionWrapper(F('cantidad') * F('producto__precio_act'), output_field=DecimalField())
-    ).aggregate(total=Sum('subtotal'))['total']
+        subtotal=ExpressionWrapper(
+            F('cantidad') * F('producto__precio_act'),
+            output_field=DecimalField()
+        )
+    ).aggregate(
+        total=Sum('subtotal', output_field=DecimalField())
+    )['total']
+    
+    if total_pagar is None:
+        total_pagar = Decimal(0)
 
     context = {
         'carrito_items': carrito_items,
