@@ -8,6 +8,10 @@ from producto.models import (ProductoEnCarrito, Producto, Subcategoria, ListaDes
 from pedido.models import Pedido, DetallePedido
 from .forms import (LoginForm, RegistroForm, UsuarioForm, CambiarPasswordForm)
 from django.http import HttpResponseRedirect
+from django.db.models import F, ExpressionWrapper, DecimalField, Sum
+
+
+
 def loginView(request):
     if request.user.is_superuser:
         return redirect('producto:inicio')
@@ -37,7 +41,6 @@ def index(request):
     # Obtener los primeros 5 productos con la fecha de actualización más reciente
     productos_recientes = Producto.objects.filter(is_activo=True).order_by('-ult_actualizacion')[:8]
     
-
     # Obtener el usuario actual
     usuario_actual = request.user
     
@@ -57,13 +60,13 @@ def index(request):
     context = {
         'productos_todos': productos_todos,
         'productos_recientes': lista,
-        
     }
     
     context.update(subcategorias(request))
 
     # Renderizar el template con los productos
     return render(request, 'index.html', context)
+
 
 
 def logoutView(request):
@@ -150,23 +153,64 @@ def pedidos_cliente(request, cliente_id):
 def detalle_producto(request, producto_id):
     producto = get_object_or_404(Producto, pk=producto_id)
     cantidades = range(1, producto.stock + 1)
+
+    usuario_actual = request.user
+    is_lista = False
+    
+    # Verificar si el usuario está autenticado
+    if usuario_actual.is_authenticated:
+        # Verificar si el producto está en la lista de deseos del usuario
+        is_lista = ListaDeseo.objects.filter(usuario=usuario_actual, producto=producto).exists()
+    
+    # Agregar is_lista al objeto producto
+    producto.is_lista = is_lista
+
+    if request.method == 'POST':
+        cantidad = request.POST.get('cantidad', None)
+        if cantidad is not None:
+            carrito, created = Carrito.objects.get_or_create(usuario=usuario_actual)
+            try:
+                producto_en_carrito = ProductoEnCarrito.objects.get(carrito=carrito, producto=producto)
+                producto_en_carrito.cantidad = F('cantidad') + int(cantidad)
+                producto_en_carrito.save()
+            except ProductoEnCarrito.DoesNotExist:
+                ProductoEnCarrito.objects.create(carrito=carrito, producto=producto, cantidad=int(cantidad))
+
+            return redirect('usuario:carrito_compra_cliente')  # Redirigir a la página del perfil del usuario o a donde desees
+
     context = {
         'producto': producto,
         'cantidades': cantidades,
     }
+
     return render(request, 'detalle_producto.html', context)
+
 
 
 def nuevos(request):
     # Obtener los primeros 8 productos con la fecha de actualización más reciente
     productos_recientes = Producto.objects.filter(is_activo=True).order_by('-ult_actualizacion')[:8]
+     # Obtener el usuario actual
+    usuario_actual = request.user
+    
+    # Crear un diccionario para almacenar los estados de la lista de deseos de cada producto
+    estado_lista_deseos = {}
+    lista = productos_recientes
+    # Verificar si el usuario está autenticado
+    if usuario_actual.is_authenticated:
+        # Obtener todos los productos en la lista de deseos del usuario
+        productos_lista_deseos = ListaDeseo.objects.filter(usuario=usuario_actual)    
+        estado_lista_deseos = [producto.producto.id for producto in productos_lista_deseos]
+        lista = []
+        for producto in productos_recientes:
+            producto.is_lista = producto.id in estado_lista_deseos
+            lista.append(producto)
     # Pasar los productos al contexto del template
     context = {
-        'productos_recientes': productos_recientes
+        'productos_recientes': lista,
     }
     
     context.update(subcategorias(request))
-    
     # Renderizar el template con los productos
     return render(request, 'nuevos.html', context)
 
@@ -245,9 +289,23 @@ def subcategorias(request):
 def productos_por_subcategoria(request, subcategoria_id):
     subcategoria = get_object_or_404(Subcategoria, pk=subcategoria_id)
     productos = Producto.objects.filter(productosubcategoria__subcategoria=subcategoria)
+    usuario_actual = request.user
+    
+    # Crear un diccionario para almacenar los estados de la lista de deseos de cada producto
+    estado_lista_deseos = {}
+    lista = productos
+    # Verificar si el usuario está autenticado
+    if usuario_actual.is_authenticated:
+        # Obtener todos los productos en la lista de deseos del usuario
+        productos_lista_deseos = ListaDeseo.objects.filter(usuario=usuario_actual)    
+        estado_lista_deseos = [producto.producto.id for producto in productos_lista_deseos]
+        lista = []
+        for producto in productos:
+            producto.is_lista = producto.id in estado_lista_deseos
+            lista.append(producto)
     context = {
         'subcategoria': subcategoria,
-        'productos': productos,
+        'productos': lista,
     }
     context.update(subcategorias(request))
     return render(request, 'productos_categorias.html', context)
@@ -277,9 +335,28 @@ def verificar_lista_deseos(request, producto_id):
     en_lista_deseos = ListaDeseo.objects.filter(usuario=usuario, producto=producto).exists()
     return JsonResponse({'in_wishlist': en_lista_deseos})
 
+
 def lista_deseos(request):
     usuario = request.user
-    
     productos_en_lista = ListaDeseo.objects.filter(usuario=usuario).select_related('producto')
-    return render(request, 'lista_deseos.html', {'productos_en_lista': productos_en_lista})
+    context = {
+        'productos_en_lista': productos_en_lista,
+    }
+    context.update(subcategorias(request))
+    
+    return render(request, 'lista_deseos.html', context)
+
+def carrito_compra_cliente(request):
+    carrito = Carrito.objects.filter(usuario=request.user).first()
+    carrito_items = ProductoEnCarrito.objects.filter(carrito=carrito)
+    
+    total_pagar = carrito_items.annotate(
+        subtotal=ExpressionWrapper(F('cantidad') * F('producto__precio_act'), output_field=DecimalField())
+    ).aggregate(total=Sum('subtotal'))['total']
+
+    context = {
+        'carrito_items': carrito_items,
+        'total_pagar': total_pagar,
+    }
+    return render(request, 'carrito_compra_cliente.html', context)
    

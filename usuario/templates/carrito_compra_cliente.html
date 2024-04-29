@@ -1,0 +1,51 @@
+<!-- carrito_compra_cliente.html -->
+
+{% extends 'general/inicio.html' %}
+{% load static %}
+
+{% block title %}
+Carrito de Compra
+{% endblock title %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <!-- Productos en el carrito -->
+        <div class="col-md-8">
+            <h2>Productos en el Carrito</h2>
+            <div class="card">
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        {% for item in carrito_items %}
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <img src="{{ item.producto.imagen.url }}" class="img-fluid" alt="{{ item.producto.nombre }}">
+                                </div>
+                                <div class="col-md-6">
+                                    <h5>{{ item.producto.nombre }}</h5>
+                                    <p>Cantidad: {{ item.cantidad }}</p>
+                                </div>
+                                <div class="col-md-3 text-end">
+                                    <p>Precio: ${{ item.producto.precio_act }}</p>
+                                </div>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- Resumen del carrito -->
+        <div class="col-md-4">
+            <h2>Resumen</h2>
+            <div class="card">
+                <div class="card-body">
+                    <p>Total a Pagar: ${{ total_pagar }}</p>
+                    <a href="#" class="btn btn-rosado">Pagar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

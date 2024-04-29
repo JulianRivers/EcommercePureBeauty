@@ -21,4 +21,5 @@ urlpatterns = [
     path('perfil',views.perfil, name='perfil'),
     path('perfil/datos',views.editar_datos, name='datos'),
     path('perfil/password',views.change_password, name='change'),
+    path('carrito_compra_cliente/', views.carrito_compra_cliente, name='carrito_compra_cliente'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

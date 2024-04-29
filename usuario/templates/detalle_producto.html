@@ -1,95 +1,13 @@
-{% extends 'layouts/base.html' %}
+{% extends 'general/inicio.html' %}
 {% load crispy_forms_tags %}
 {% load static %}
 
 {% block title %}
 Pure Beauty
 {% endblock title %}
-
-{% block style %}
-<script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
-<script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
-<script src="https://kit.fontawesome.com/713036b1f5.js" crossorigin="anonymous"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="{% static 'js/animations.js' %}"></script>
-<script src="{% static 'js/ajaxRequest.js' %}"></script>
-{% endblock style %}
   
-{% block body %}
-<header>
-  <!-- Jumbotron -->
-  <div class="p-3 text-center bg-white border-bottom">
-    <div class="container">
-      <div class="row gy-3">
-        <!-- Left elements -->
-        <div class="col-lg-2 col-sm-4 col-4">
-          <a href="https://mdbootstrap.com/" target="_blank" class="float-start">
-            <img src="{% static 'images/logo.jpg' %}" height="60" />
-          </a>
-        </div>
-        <!-- Left elements -->
+{% block content %}
 
-        <!-- Center elements -->
-        <div class="order-lg-last col-lg-10 col-sm-8 col-8">
-          <div class="d-flex justify-content-end"> <!-- Cambiado de float-end a justify-content-end -->
-            <a href="{% url 'usuario:login' %}" class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center" style="color: #d7716a;">
-              <i class="fas fa-user-alt m-1 me-md-2"></i>
-              <p class="d-none d-md-block mb-0" style="color:#d7716a;">Iniciar Sesión</p>
-            </a>
-            <a href="{% url 'usuario:login' %}" class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center">
-              <i class="fas fa-heart m-1 me-md-2" style="color: #d7716a;"></i>
-              <p class="d-none d-md-block mb-0" style="color: #d7716a;">Lista de deseos</p>
-            </a>
-            <a href="{% url 'usuario:login' %}" class="border rounded py-1 px-3 nav-link d-flex align-items-center">
-              <i class="fas fa-shopping-cart m-1 me-md-2" style="color: #d7716a;"></i>
-              <p class="d-none d-md-block mb-0" style="color: #d7716a;">Mi carrito</p>
-            </a>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-  <!-- Jumbotron -->
-
-  <!-- Navbar -->
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <div class="container">
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item active">
-          <a class="nav-link" href="/">Inicio <span class="sr-only">(current)</span></a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Nuevos</a>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Categorias
-          </a>
-          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="#">Cabello</a>
-            <a class="dropdown-item" href="#">Maquillaje</a>
-            <a class="dropdown-item" href="#">Marcas</a>
-            <a class="dropdown-item" href="#">Skincare</a>
-            <a class="dropdown-item" href="#">Kits</a>
-          </div>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Ofertas</a>
-        </li>
-      </ul>
-      
-    </div>
-  </div>
-</nav>
-
-</header>
 <!-- Products -->
 <section>
     <div class="container my-5">
@@ -104,20 +22,39 @@ Pure Beauty
         <div class="col-lg-6 col-md-6 col-sm-6">
           <h2>{{ producto.nombre }}</h2>
           <p>{{ producto.descripcion }}</p>
-          <a href="#!" class="btn btn-light border px-2 pt-2 icon-hover"><i
-            class="fas fa-heart fa-lg text-secondary px-1"></i></a>
+          {% if user.is_authenticated %}
+          {% if producto.is_lista %}
+          <a href="/" class="btn btn-light border px-2 pt-2 icon-hover add-to-wishlist"
+            data-product-id="{{ producto.id }}">
+            <i class="fas fa-heart fa-lg px-1" style="color: rgb(255, 0, 0);"></i>
+          </a>
+          {% else %}
+          <a href="/" class="btn btn-light border px-2 pt-2 icon-hover add-to-wishlist"
+            data-product-id="{{ producto.id }}">
+            <i class="fas fa-heart fa-lg px-1" style="color: rgb(105, 105, 105);"></i>
+          </a>
+          {% endif %}
+          {% else %}
+          <a href="{% url 'usuario:login' %}" class="btn btn-light border px-2 pt-2 icon-hover">
+            <i class="fas fa-heart fa-lg px-1" style="color: rgb(105, 105, 105);"></i>
+          </a>
+          {% endif %}
           <p><strong>Precio:</strong> {{ producto.precio_act }}</p>
           <form action="" method="post">
             {% csrf_token %}
             <div class="mb-3">
-              <label for="cantidad" class="form-label">Cantidad:</label>
-              <select class="form-select custom-select" id="cantidad" name="cantidad">
-                {% for cantidad in cantidades %}
-                  <option value="{{ cantidad }}">{{ cantidad }}</option>
-                {% endfor %}
-              </select>
+                <label for="cantidad" class="form-label">Cantidad:</label>
+                <select class="form-select custom-select" id="cantidad" name="cantidad">
+                    {% for cantidad in cantidades %}
+                        <option value="{{ cantidad }}">{{ cantidad }}</option>
+                    {% endfor %}
+                </select>
             </div>
+            {% if user.is_authenticated %}
             <button type="submit" class="btn btn-rosado">Agregar al carrito</button>
+            {% else %}
+            <a href="{% url 'usuario:login' %}" class="btn btn-rosado">Agregar al carrito</a>
+            {% endif %}
           </form>
         </div>
       </div>
@@ -125,72 +62,35 @@ Pure Beauty
   </section>
 <!-- Products -->
 
-<!-- Feature -->
-
-<!-- Footer -->
-<footer class="text-center text-lg-start text-muted mt-3" style="background-color: #f5f5f5;">
-  <!-- Section: Links  -->
-  <section class="">
-    <div class="container text-center text-md-start pt-4 pb-4">
-      <!-- Grid row -->
-      <div class="row mt-3">
-        <!-- Grid column -->
-        <div class="col-12 col-lg-3 col-sm-12 mb-2">
-          <!-- Content -->
-          <a href="https://mdbootstrap.com/" target="_blank" class="">
-            <img src="{% static 'images/logo.jpg' %}" height="35" />
-          </a>
-          <p class="mt-2 text-dark">
-            © 2024 Copyright: Pure Beauty
-          </p>
-        </div>
-        <!-- Grid column -->
+<script>
+  $(document).ready(function () {
+    // Función para manejar el evento de clic en el botón de la lista de deseos
+    $('.add-to-wishlist').on('click', function (e) {
+      e.preventDefault();
+      var productoId = $(this).data('product-id');
   
-        <!-- Grid column for Instagram -->
-        <div class="col-6 col-sm-4 col-lg-2">
-          <!-- Links -->
-          <h6 class="text-uppercase text-dark fw-bold mb-2">
-            Instagram
-          </h6>
-          <ul class="list-unstyled mb-4">
-            <li><a class="text-muted" href="#">Síguenos</a></li>
-          </ul>
-        </div>
-        <!-- Grid column for Instagram -->
-  
-        <!-- Grid column for WhatsApp -->
-        <div class="col-6 col-sm-4 col-lg-2">
-          <!-- Links -->
-          <h6 class="text-uppercase text-dark fw-bold mb-2">
-            WhatsApp
-          </h6>
-          <ul class="list-unstyled mb-4">
-            <li><a class="text-muted" href="#">Contactanos</a></li>
-          </ul>
-        </div>
-        <!-- Grid column for WhatsApp -->
-      </div>
-      <!-- Grid row -->
-    </div>
-  </section>
-  <!-- Section: Links  -->
+      // Realizar una solicitud AJAX para agregar o quitar el producto de la lista de deseos
+      $.ajax({
+        type: 'GET',
+        url: '/agregar-a-lista-deseos/' + productoId + '/',
+        success: function (response) {
+          if (!response.success) {
+            alert(response.message);
+          } else {
+            // Mostrar mensaje de éxito si es necesario
+            if (response.success) {
+              $('#success-message').text(response.message).show();
+            }
+          }
+          location.reload();
+        },
+        error: function (xhr, status, error) {
+          console.error(error);
+          location.reload();
+        }
+      });
+    });
+  });
+</script>
 
-  <div class="">
-    <div class="container">
-      <div class="d-flex justify-content-between py-4 border-top">
-        <!--- payment --->
-        <div>
-          <i class="fab fa-lg fa-cc-visa text-dark"></i>
-          <i class="fab fa-lg fa-cc-amex text-dark"></i>
-          <i class="fab fa-lg fa-cc-mastercard text-dark"></i>
-          <i class="fab fa-lg fa-cc-paypal text-dark"></i>
-        </div>
-        <!--- payment --->
-
-        
-        <!--- language selector --->
-      </div>
-    </div>
-  </div>
-</footer>
-{% endblock body %}
+{% endblock content %}

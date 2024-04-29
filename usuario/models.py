@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import (
     AbstractBaseUser, PermissionsMixin, BaseUserManager)
 from django.contrib.auth.models import AbstractUser
-
+from django.utils import timezone
 # Modelos de la base de datos relacionados a los usuarios clientes o administrador
 
 
@@ -107,7 +107,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
 class Carrito (models.Model):
     '''Modelo que representa la tabla en la BD de los Carritos de compras'''
     usuario = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-    fecha_creacion = models.DateTimeField('Fecha de creación')
+    fecha_creacion = models.DateTimeField('Fecha de creación', default=timezone.now)
 
     def __str__(self):
         '''Representación en un String del carrito de compras'''
