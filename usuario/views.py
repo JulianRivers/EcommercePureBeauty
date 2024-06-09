@@ -5,10 +5,11 @@ from django.contrib import messages
 from django.http import JsonResponse
 from .models import (UserProfile, Carrito)
 from producto.models import (ProductoEnCarrito, Producto, Subcategoria, ListaDeseo)
-from pedido.models import Pedido, DetallePedido
+from pedido.models import Pedido, DetallePedido, MetodoPago, EstadoPedido
 from .forms import (LoginForm, RegistroForm, UsuarioForm, CambiarPasswordForm)
 from django.db.models import F, ExpressionWrapper, DecimalField, Sum
 from decimal import Decimal
+from django.utils import timezone
 
 
 
@@ -219,15 +220,17 @@ def perfil(request):
     form = UsuarioForm(instance=usuario)
     form1 = CambiarPasswordForm()
 
+    # Obtener los pedidos del usuario
+    pedidos = Pedido.objects.filter(usuario=usuario).order_by('-fecha')
+
     context = {
         "form": form,
-        "form1": form1
+        "form1": form1,
+        "pedidos": pedidos,  # Añadir pedidos al contexto
     }
-    
     
     context.update(subcategorias(request))
     
-    # Renderizar el template con los productos
     return render(request, 'perfil.html', context)
 
 def editar_datos(request):
@@ -366,5 +369,53 @@ def carrito_compra_cliente(request):
         'carrito_items': carrito_items,
         'total_pagar': total_pagar,
     }
+    context.update(subcategorias(request))
     return render(request, 'carrito_compra_cliente.html', context)
+
+def pagar_carrito(request):
+    carrito = Carrito.objects.filter(usuario=request.user).first()
+    if not carrito:
+        # Carrito vacío o no encontrado
+        return redirect('carrito_compra_cliente')
+    
+    carrito_items = ProductoEnCarrito.objects.filter(carrito=carrito)
+    if not carrito_items.exists():
+        # Sin productos en el carrito
+        return redirect('carrito_compra_cliente')
+    
+    # Crear el pedido
+    total_compra = carrito_items.annotate(
+        subtotal=ExpressionWrapper(
+            F('cantidad') * F('producto__precio_act'),
+            output_field=DecimalField()
+        )
+    ).aggregate(
+        total=Sum('subtotal', output_field=DecimalField())
+    )['total']
+
+    metodo_pago = MetodoPago.objects.first()  # Suponiendo que tienes métodos de pago predefinidos
+    estado_pedido = EstadoPedido.objects.first()  # Suponiendo que tienes estados de pedido predefinidos
+
+    pedido = Pedido.objects.create(
+        direccion_entrega=request.user.direccion,
+        fecha=timezone.now(),
+        total_compra=total_compra,
+        usuario=request.user,
+        metodo=metodo_pago,
+        estado_pedido=estado_pedido,
+    )
+
+    for item in carrito_items:
+        DetallePedido.objects.create(
+            pedido=pedido,
+            producto=item.producto,
+            precio_producto=item.producto.precio_act,
+            cantidad=item.cantidad,
+        )
+
+    # Limpiar el carrito después de crear el pedido
+    carrito_items.delete()
+    carrito.delete()
+
+    return redirect('usuario:perfil')  # Redirigir a la página de perfil del usuario
    

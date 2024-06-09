@@ -1,5 +1,4 @@
 <!-- carrito_compra_cliente.html -->
-
 {% extends 'general/inicio.html' %}
 {% load static %}
 
@@ -42,7 +41,10 @@ Carrito de Compra
             <div class="card">
                 <div class="card-body">
                     <p>Total a Pagar: ${{ total_pagar }}</p>
-                    <a href="#" class="btn btn-rosado">Pagar</a>
+                    <form method="post" action="{% url 'usuario:pagar_carrito' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-rosado">Pagar</button>
+                    </form>
                 </div>
             </div>
         </div>

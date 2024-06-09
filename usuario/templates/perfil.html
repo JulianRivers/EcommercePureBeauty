@@ -6,7 +6,6 @@
 Pure Beauty
 {% endblock title %}
 
-
 {% block content %}
 
 <br>
@@ -21,12 +20,11 @@ Pure Beauty
       <div class="border-end border-2"></div>
     </div>
     <!-- Formulario al lado del título -->
-    <div class="col-md-6" style=" border-left: 2px dashed black;
-    height: 100%;">
+    <div class="col-md-6" style="border-left: 2px dashed black; height: 100%;">
       <form method="POST" action="{% url 'usuario:datos' %}">
         {% csrf_token %}
         <h2>Información Personal</h2>
-       {{form|crispy}}
+        {{ form|crispy }}
         <button type="submit" class="btn btn-dark">Actualizar datos</button>
       </form>
     </div>
@@ -45,18 +43,75 @@ Pure Beauty
       <div class="border-end border-2"></div>
     </div>
     <!-- Formulario al lado del título -->
-    <div class="col-md-6" style=" border-left: 2px dashed black;
-    height: 100%;">
+    <div class="col-md-6" style="border-left: 2px dashed black; height: 100%;">
       <form method="POST" action="{% url 'usuario:change' %}">
         {% csrf_token %}
         <h2>Cambiar Contraseña</h2>
-       {{form1|crispy}}
+        {{ form1|crispy }}
         <button type="submit" class="btn btn-dark">Cambiar Contraseña</button>
       </form>
     </div>
   </div>
 </div>
 <br>
-<br><br>
 <br>
+
+<!-- Listado de Pedidos -->
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <h2>Mis Pedidos</h2>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">ID Pedido</th>
+            <th scope="col">Fecha</th>
+            <th scope="col">Total</th>
+            <th scope="col">Estado</th>
+            <th scope="col">Detalles</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for pedido in pedidos %}
+          <tr>
+            <th scope="row">{{ pedido.id }}</th>
+            <td>{{ pedido.fecha|date:"d M Y" }}</td>
+            <td>${{ pedido.total_compra }}</td>
+            <td>{{ pedido.estado_pedido.nombre }}</td>
+            <td>
+              <button class="btn btn-rosado" onclick="mostrarDetalles('{{ pedido.id }}')">Mostrar detalles</button>
+              <div id="detalles_{{ pedido.id }}" style="display: none;">
+                <h3>Productos del Pedido #{{ pedido.id }}</h3>
+                <ul>
+                  {% for detalle in pedido.detallepedido_set.all %}
+                  <li>{{ detalle.producto.nombre }} - Cantidad: {{ detalle.cantidad }}</li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="5">No has realizado ningún pedido.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<br>
+<br>
+
+<script>
+function mostrarDetalles(pedidoId) {
+  var detallesDiv = document.getElementById('detalles_' + pedidoId);
+  if (detallesDiv.style.display === 'none') {
+    detallesDiv.style.display = 'block';
+  } else {
+    detallesDiv.style.display = 'none';
+  }
+}
+</script>
+
 {% endblock content %}
