@@ -7,10 +7,10 @@
 <div class="container">
     <div class="row">
         <div class="col-8">
-            <h1>Listado de categorias</h1>
+            <h1>Listado de categorías</h1>
         </div>
         <div class="col-4 text-right">
-            <a class="btn btn-outline-dark" href="{% url 'producto:add_categorias' %}">Agregar categoria</a>
+            <a class="btn btn-outline-dark" href="{% url 'producto:add_categoria' %}">Agregar categoria</a>
         </div>
     </div>
 
@@ -51,11 +51,9 @@
             <td>
                 <div class="container">
                     <div class="row">
-
                         <a href="producto/delete/{{producto.id}}">
                             <button class="btn btn-outline-dark btn-block">🗑</button>
                         </a>
-
                     </div>
                 </div>
             </td>

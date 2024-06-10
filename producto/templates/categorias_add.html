@@ -7,10 +7,10 @@
 <div class="container">
     <div class="row">
         <div class="col-8">
-            <h1>Listado de productos</h1>
+            <h1>Listado de categorías</h1>
         </div>
         <div class="col-4 text-right">
-            <button class="btn btn-outline-dark" onclick="abrirModal()">Agregar producto</button>
+            <button class="btn btn-outline-dark" onclick="abrirModal()">Agregar categorías</button>
         </div>
     </div>
 
@@ -39,10 +39,6 @@
         <tr>
             <th scope="col" style="color:aliceblue;">#</th>
             <th scope="col" style="color:aliceblue;">Nombre</th>
-            <th scope="col" style="color:aliceblue;">Cantidad</th>
-            <th scope="col" style="color:aliceblue;">Descuento</th>
-            <th scope="col" style="color:aliceblue;">Categoría</th>
-            <th scope="col" style="color:aliceblue;">Precio</th>
             <th scope="col" style="color:aliceblue;">Acción</th>
         </tr>
     </thead>
@@ -51,29 +47,13 @@
         <tr>
             <th scope="row">{{ forloop.counter }}</th>
             <td>{{ producto.nombre }}</td>
-            <td>{{ producto.stock }}</td>
-            <td>
-                <a href="#">
-                    <div class="container">
-                        <div class="row">
-                            {{ producto.precio_desc }}✎
-                        </div>
-                    </div>
-                </a>
-            </td>
-            <td><a href="#">{{ producto.categoria }}</a></td>
-            <td>${{producto.precio_act|floatformat:0|intcomma}}</td>
             <td>
                 <div class="container">
                     <div class="row">
-                        <div class="col-4">
-                            <button class="btn btn-outline-dark btn-block">🗑</button>
-                        </div>
-                        <div class="col-4">
-                            <button class="btn btn-outline-dark btn-block" onclick="abrirModalDetalle()">👁</button>
-                        </div>
-                        <div class="col-4">
-                            <button class="btn btn-outline-dark btn-block">✎</button>
+                        <div class="row">
+                            <a href="producto/delete/{{producto.id}}">
+                                <button class="btn btn-outline-dark btn-block">🗑</button>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -103,7 +83,7 @@
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-outline-dark">Añadir</button>
                     <a href="/producto" class="btn btn-outline-dark">Cerrara</a>
-                    
+
                 </div>
             </form>
         </div>
@@ -112,10 +92,10 @@
 
 <div class="modal-background" id="detallebackground" style="display: none;">
     <!-- Contenido del modal -->
-    <div class="modal" id="detalleProducto" style="max-height: 700px; overflow-y: auto;">
+    <div class="modal" id="detalleProducto" style="max-height: 310px; overflow-y: auto;">
         <div class="modal-header">
-            <h2 class="modal-title">{{ detalle.nombre }}</h2>
-            <a href="{% url 'producto:inicio' %}">
+            <h2 class="modal-title">Agregar Categoria</h2>
+            <a href="{% url 'producto:categorias' %}">
                 <button type="button" class="close" onclick="cerrarModalDetalle()" aria-label="Cerrar">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -124,53 +104,50 @@
         <div class="modal-body">
             <!-- Muestra la imagen centrada -->
             <div class="text-center">
-                <img src="{{ detalle.imagen.url }}" alt="{{ detalle.nombre }}" class="img-fluid"
-                    style="max-width: 300px; max-height: 200px;"">
+
             </div>
-                <form method="POST" action="/producto/editar/{{detalle.id}}" enctype="multipart/form-data">
+            <form method="POST" action="{% url 'producto:add_categoria' %}" enctype="multipart/form-data">
                 {% csrf_token %}
-                {{ form_producto|crispy }}
-                <br>
-                {{ form_subcategoria|crispy }}
+                {{ form|crispy }}
 
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-outline-dark">Editar</button>
-                    <a href="/productos" class="btn btn-outline-dark">Cerrar</a>
+                    <button type="submit" class="btn btn-outline-dark">Añadir</button>
+                    <a href="{% url 'producto:categorias' %}" class="btn btn-outline-dark">Cerrar</a>
                 </div>
-                </form>
+            </form>
 
-            </div>
         </div>
     </div>
-    <!-- Fin Modales -->
+</div>
+<!-- Fin Modales -->
 
-    <script>
-        function abrirModal() {
-            // Mostrar el fondo oscuro y el modal
-            document.getElementById("addProductoBg").style.display = "flex";
-            document.getElementById("addProducto").style.display = "block";
-        }
+<script>
+    function abrirModal() {
+        // Mostrar el fondo oscuro y el modal
+        document.getElementById("addProductoBg").style.display = "flex";
+        document.getElementById("addProducto").style.display = "block";
+    }
 
-        function cerrarModal() {
-            // Ocultar el fondo oscuro y el modal
-            document.getElementById("addProductoBg").style.display = "none";
-            document.getElementById("addProducto").style.display = "none";
-        }
-        cerrarModal()
-        function abrirModalDetalle() {
-            // Mostrar el fondo oscuro y el modal
-            document.getElementById("detallebackground").style.display = "flex";
-            document.getElementById("detalleProducto").style.display = "block";
-        }
+    function cerrarModal() {
+        // Ocultar el fondo oscuro y el modal
+        document.getElementById("addProductoBg").style.display = "none";
+        document.getElementById("addProducto").style.display = "none";
+    }
+    cerrarModal()
+    function abrirModalDetalle() {
+        // Mostrar el fondo oscuro y el modal
+        document.getElementById("detallebackground").style.display = "flex";
+        document.getElementById("detalleProducto").style.display = "block";
+    }
 
-        function cerrarModalDetalle() {
-            // Ocultar el fondo oscuro y el modal
-            document.getElementById("detallebackground").style.display = "none";
-            document.getElementById("detalleProducto").style.display = "none";
-        }
-        cerrarModalDetalle()
-        abrirModalDetalle()
+    function cerrarModalDetalle() {
+        // Ocultar el fondo oscuro y el modal
+        document.getElementById("detallebackground").style.display = "none";
+        document.getElementById("detalleProducto").style.display = "none";
+    }
+    cerrarModalDetalle()
+    abrirModalDetalle()
 
-    </script>
+</script>
 
-    {% endblock content %}
+{% endblock content %}

@@ -1,7 +1,7 @@
 from django import forms
 
 from django import forms
-from .models import (Producto, ProductoSubcategoria)
+from .models import (Producto, ProductoSubcategoria, Subcategoria)
 
 
 class ProductoForm(forms.ModelForm):
@@ -9,6 +9,10 @@ class ProductoForm(forms.ModelForm):
         model = Producto
         fields = ['nombre', 'stock', 'descripcion', 'precio_act', 'imagen']
 
+class CategoriaForm(forms.ModelForm):
+    class Meta:
+        model = Subcategoria
+        fields = ['nombre']
 
 class ProductoSubcategoriaForm(forms.ModelForm):
     class Meta:

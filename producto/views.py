@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 
 from .models import (Producto, ProductoSubcategoria, Subcategoria)
-from .forms import (ProductoForm, ProductoSubcategoriaForm)
+from .forms import (ProductoForm, ProductoSubcategoriaForm, CategoriaForm)
 # Create your views here.
 
 def inicio(request):
@@ -29,21 +29,23 @@ def inicio(request):
 def categoria(request):
     productos = Subcategoria.objects.all()
 
-            
     context = {
         'productos': productos, 
-        'form_producto':ProductoForm(), 
-        'form_subcategoria': ProductoSubcategoriaForm(),
     }
     return render(request, 'categorias.html', context)
 
 def agregar_categoria(request):
     productos = Subcategoria.objects.all()
+
+    if request.method == 'POST':
+        form = CategoriaForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('producto:categorias')
   
     context = {
         'productos': productos, 
-        'form_producto':ProductoForm(), 
-        'form_subcategoria': ProductoSubcategoriaForm(),
+        'form': CategoriaForm()
     }
     return render(request, 'categorias_add.html', context)
 
