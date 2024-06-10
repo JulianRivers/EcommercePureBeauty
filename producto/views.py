@@ -49,6 +49,12 @@ def agregar_categoria(request):
     }
     return render(request, 'categorias_add.html', context)
 
+def deleteCategoria(request, id):
+    print("SIUUUUU")
+    categoria = get_object_or_404(Subcategoria, id=id)
+    categoria.delete()
+    return redirect('producto:categorias')
+
 def addProducto(request):
     if request.method == 'POST':
         form_producto = ProductoForm(request.POST, request.FILES)
