@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 
-from .models import (Producto, ProductoSubcategoria)
+from .models import (Producto, ProductoSubcategoria, Subcategoria)
 from .forms import (ProductoForm, ProductoSubcategoriaForm)
 # Create your views here.
 
@@ -25,6 +25,27 @@ def inicio(request):
         'form_subcategoria': ProductoSubcategoriaForm(),
     }
     return render(request, 'productos.html', context)
+
+def categoria(request):
+    productos = Subcategoria.objects.all()
+
+            
+    context = {
+        'productos': productos, 
+        'form_producto':ProductoForm(), 
+        'form_subcategoria': ProductoSubcategoriaForm(),
+    }
+    return render(request, 'categorias.html', context)
+
+def agregar_categoria(request):
+    productos = Subcategoria.objects.all()
+  
+    context = {
+        'productos': productos, 
+        'form_producto':ProductoForm(), 
+        'form_subcategoria': ProductoSubcategoriaForm(),
+    }
+    return render(request, 'categorias_add.html', context)
 
 def addProducto(request):
     if request.method == 'POST':

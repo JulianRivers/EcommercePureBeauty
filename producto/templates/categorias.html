@@ -7,10 +7,10 @@
 <div class="container">
     <div class="row">
         <div class="col-8">
-            <h1>Listado de Categorias Padre</h1>
+            <h1>Listado de categorias</h1>
         </div>
         <div class="col-4 text-right">
-            <button class="btn btn-outline-dark" onclick="abrirModal()">Agregar Categorias Padre</button>
+            <a class="btn btn-outline-dark" href="{% url 'producto:add_categorias' %}">Agregar categoria</a>
         </div>
     </div>
 
@@ -38,112 +38,24 @@
     <thead style="background-color: #7386D5;">
         <tr>
             <th scope="col" style="color:aliceblue;">#</th>
-            <th scope="col" style="color:aliceblue;">Categoria Padre</th>
-            <th scope="col" style="color:aliceblue;">Categoria</th>
+            <th scope="col" style="color:aliceblue;">Nombre</th>
             <th scope="col" style="color:aliceblue;">Acción</th>
         </tr>
     </thead>
     <tbody>
-        {% for categoria in categorias %}
+        {% for producto in productos %}
         <tr>
             <th scope="row">{{ forloop.counter }}</th>
-            <td>
-                {% if categoria.categoria_padre is none %}
-                -
-                {% else %}
-                {{ categoria.categoria_padre }}
-                {% endif %}
-            </td>
-            <td>{{ categoria.nombre}}</td>
-
-            <td>
-                <div class="container">
-
-                    {% if categoria.categoria_padre is none %}
-                    <div class="row">
-                        <div class="col-6">
-                            <a class="btn btn-outline-dark btn-block" href="{% url 'producto:add_categoria' %}">✚</a>
-                        </div>
-                        <div class="col-6">
-                            <a href="producto/delete/{{producto.id}}">
-                                <button class="btn btn-outline-dark btn-block">🗑</button>
-                            </a>
-                        </div>
-                    </div>
-                    {% else %}
-                    <div class="row">
-                        <div class="col-6">
-                            <a href="producto/delete/{{producto.id}}">
-                                <button class="btn btn-outline-dark btn-block">🗑</button>
-                            </a>
-                        </div>
-                    </div>
-                    {% endif %}
-
-                </div>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
-<div class="container">
-    <div class="row">
-        <div class="col-8">
-            <h1>Listado de Categorias</h1>
-        </div>
-        <div class="col-4 text-right">
-            <button class="btn btn-outline-dark" onclick="abrirModal()">Agregar Categorias</button>
-        </div>
-    </div>
-
-</div>
-<nav aria-label="Page navigation example">
-    <ul class="pagination">
-        <li class="page-item">
-            <a class="page-link" style="color: black;" href="#" aria-label="Previous">
-                <span aria-hidden="true">&laquo;</span>
-                <span class="sr-only">Previous</span>
-            </a>
-        </li>
-        <li class="page-item"><a class="page-link" style="color: black;" href="#">1</a></li>
-        <li class="page-item"><a class="page-link" style="color: black;" href="#">2</a></li>
-        <li class="page-item"><a class="page-link" style="color: black;" href="#">3</a></li>
-        <li class="page-item">
-            <a class="page-link" style="color: black;" href="#" aria-label="Next">
-                <span aria-hidden="true">&raquo;</span>
-                <span class="sr-only">Next</span>
-            </a>
-        </li>
-    </ul>
-</nav>
-<table class="table">
-    <thead style="background-color: #7386D5;">
-        <tr>
-            <th scope="col" style="color:aliceblue;">#</th>
-            <th scope="col" style="color:aliceblue;">Categoria Padre</th>
-            <th scope="col" style="color:aliceblue;">Categoria</th>
-            <th scope="col" style="color:aliceblue;">Acción</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for categoria in subcategorias %}
-        <tr>
-            <th scope="row">{{ forloop.counter }}</th>
-            <td>{{ categoria.categoria}}</td>
-            <td>{{ categoria.nombre}}</td>
+            <td>{{ producto.nombre }}</td>
 
             <td>
                 <div class="container">
                     <div class="row">
-                        <div class="col-6">
-                            <button class="btn btn-outline-dark btn-block">✎</button>
-                        </div>
-                        <div class="col-6">
-                            <a href="producto/delete/{{producto.id}}">
-                                <button class="btn btn-outline-dark btn-block">🗑</button>
-                            </a>
-                        </div>
+
+                        <a href="producto/delete/{{producto.id}}">
+                            <button class="btn btn-outline-dark btn-block">🗑</button>
+                        </a>
+
                     </div>
                 </div>
             </td>
@@ -151,47 +63,5 @@
         {% endfor %}
     </tbody>
 </table>
-
-<!-- MODALES -->
-<div class="modal-background" id="addProductoBg">
-    <!-- Contenido del modal -->
-    <div class="modal" id="addProducto">
-        <div class="modal-header">
-            <h2 class="modal-title">Agregar Categoría Padre</h2>
-            <button type="button" class="close" onclick="cerrarModal()" aria-label="Cerrar">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        <div class="modal-body">
-            <form method="POST" action="{% url 'producto:add_categoria' %}">
-                {% csrf_token %}
-                {{ form_cat_padre|crispy }}
-
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-outline-dark">Añadir</button>
-                    <button type="button" class="btn btn-outline-dark" onclick="cerrarModal()">Cerrar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-
-<script>
-    function abrirModal() {
-        // Mostrar el fondo oscuro y el modal
-        document.getElementById("addProductoBg").style.display = "flex";
-        document.getElementById("addProducto").style.display = "block";
-    }
-
-    function cerrarModal() {
-        // Ocultar el fondo oscuro y el modal
-        document.getElementById("addProductoBg").style.display = "none";
-        document.getElementById("addProducto").style.display = "none";
-    }
-    cerrarModal()   
-    abrirModal();
-</script>
-<script src="{% static 'js/script.js' %}"></script>
 
 {% endblock content %}

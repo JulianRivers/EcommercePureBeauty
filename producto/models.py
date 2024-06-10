@@ -30,7 +30,6 @@ class Subcategoria(models.Model):
         return f"{self.nombre}"
     
 
-
 class ProductoSubcategoria(models.Model):
     ''' Modelo que respresenta la relación muchos a muchos entre producto y categorias'''
     producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
