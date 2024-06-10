@@ -2,11 +2,12 @@ import json
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
+from django.contrib.auth.decorators import login_required
 
 from .models import (Producto, ProductoSubcategoria, Subcategoria)
 from .forms import (ProductoForm, ProductoSubcategoriaForm, CategoriaForm)
-# Create your views here.
 
+@login_required(login_url='/login') 
 def inicio(request):
     productos = Producto.objects.all()
 
@@ -26,6 +27,7 @@ def inicio(request):
     }
     return render(request, 'productos.html', context)
 
+@login_required(login_url='/login') 
 def categoria(request):
     productos = Subcategoria.objects.all()
 
@@ -34,6 +36,7 @@ def categoria(request):
     }
     return render(request, 'categorias.html', context)
 
+@login_required(login_url='/login') 
 def agregar_categoria(request):
     productos = Subcategoria.objects.all()
 
@@ -49,12 +52,14 @@ def agregar_categoria(request):
     }
     return render(request, 'categorias_add.html', context)
 
+@login_required(login_url='/login') 
 def deleteCategoria(request, id):
     print("SIUUUUU")
     categoria = get_object_or_404(Subcategoria, id=id)
     categoria.delete()
     return redirect('producto:categorias')
 
+@login_required(login_url='/login') 
 def addProducto(request):
     if request.method == 'POST':
         form_producto = ProductoForm(request.POST, request.FILES)
@@ -80,6 +85,7 @@ def addProducto(request):
             return redirect('producto:inicio')
     return render(request, 'productos.html',)
 
+@login_required(login_url='/login') 
 def detalleProducto(request, id):
     productos = Producto.objects.all()
     detalle = get_object_or_404(Producto, id=id)
@@ -100,11 +106,13 @@ def detalleProducto(request, id):
     }
     return render(request, 'productos_detalle.html', context)
 
+@login_required(login_url='/login') 
 def deleteProducto(request, id):
     producto = get_object_or_404(Producto, id=id)
     producto.delete()
     return redirect('producto:inicio')
 
+@login_required(login_url='/login') 
 def editarProducto(request, id):
     # Obtén el producto por ID
     producto = get_object_or_404(Producto, id=id)

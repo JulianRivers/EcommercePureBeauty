@@ -1,6 +1,8 @@
 from django.shortcuts import get_object_or_404, render
 from django.shortcuts import render, redirect
 from django.contrib.auth import (login, logout)
+from django.contrib.auth.decorators import login_required
+
 from django.contrib import messages
 from django.http import JsonResponse
 from .models import (UserProfile, Carrito)
@@ -93,7 +95,7 @@ def registerView(request):
     }
     return render(request, 'registro.html', context)
 
-
+@login_required(login_url='/login') 
 def lista_clientes(request):
     clientes = UserProfile.objects.exclude(is_superuser=True)
     
