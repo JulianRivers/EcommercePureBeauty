@@ -23,4 +23,5 @@ urlpatterns = [
     path('perfil/password',views.change_password, name='change'),
     path('carrito_compra_cliente/', views.carrito_compra_cliente, name='carrito_compra_cliente'),
     path('carrito/pagar/', views.pagar_carrito, name='pagar_carrito'),
+    path('carrito/eliminar/<int:producto_id>/', views.eliminar_producto_carrito, name='eliminar_producto_carrito'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -420,4 +420,13 @@ def pagar_carrito(request):
     carrito.delete()
 
     return redirect('usuario:perfil')  # Redirigir a la página de perfil del usuario
+
+
+def eliminar_producto_carrito(request, producto_id):
+    if request.method == 'POST':
+        carrito = get_object_or_404(Carrito, usuario=request.user)
+        producto_en_carrito = get_object_or_404(ProductoEnCarrito, carrito=carrito, producto_id=producto_id)
+        producto_en_carrito.delete()
+        return redirect('usuario:carrito_compra_cliente')
+    return redirect('usuario:carrito_compra_cliente')
    
