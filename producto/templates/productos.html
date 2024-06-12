@@ -95,7 +95,7 @@
 <!-- MODALES -->
 <div class="modal-background" id="addProductoBg">
     <!-- Contenido del modal -->
-    <div class="modal" id="addProducto">
+    <div class="modal" id="addProducto" style="max-height: 800px; overflow-y: auto;">
         <div class="modal-header">
             <h2 class="modal-title">Agregar Producto</h2>
             <button type="button" class="close" onclick="cerrarModal()" aria-label="Cerrar">
@@ -108,7 +108,6 @@
                 {{ form_producto|crispy }}
                 <br>
                 {{ form_subcategoria|crispy }}
-
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-outline-dark">Añadir</button>
                     <button type="button" class="btn btn-outline-dark" onclick="cerrarModal()">Cerrar</button>

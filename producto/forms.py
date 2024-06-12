@@ -5,6 +5,8 @@ from .models import (Producto, ProductoSubcategoria, Subcategoria)
 
 
 class ProductoForm(forms.ModelForm):
+    tiene_iva = forms.BooleanField(required=False, label="¿Tiene IVA?")
+    
     class Meta:
         model = Producto
         fields = ['nombre', 'stock', 'descripcion', 'precio_act', 'imagen']

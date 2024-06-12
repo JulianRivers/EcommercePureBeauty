@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
+from decimal import Decimal
 
 from .models import (Producto, ProductoSubcategoria, Subcategoria)
 from .forms import (ProductoForm, ProductoSubcategoriaForm, CategoriaForm)
@@ -72,10 +73,12 @@ def addProducto(request):
             producto.fecha_inicio_desc = timezone.now()
             producto.fecha_fin_desc = timezone.now()
             producto.ult_actualizacion = timezone.now()
-            print(request.FILES)
+
+            # Procesa el campo tiene_iva para calcular el precio con IVA
+            if form_producto.cleaned_data.get('tiene_iva'):
+                producto.precio_act = producto.precio_act * Decimal('1.19')
 
             producto.imagen = request.FILES['imagen']
-            print(producto.imagen)
             producto.save()
 
             producto_subcategoria = form_subcategoria.save(commit=False)
@@ -83,7 +86,14 @@ def addProducto(request):
             producto_subcategoria.save()
 
             return redirect('producto:inicio')
-    return render(request, 'productos.html',)
+    else:
+        form_producto = ProductoForm()
+        form_subcategoria = ProductoSubcategoriaForm()
+
+    return render(request, 'productos.html', {
+        'form_producto': form_producto,
+        'form_subcategoria': form_subcategoria,
+    })
 
 @login_required(login_url='/login') 
 def detalleProducto(request, id):
