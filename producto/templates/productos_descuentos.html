@@ -62,7 +62,7 @@
                 </a>
             </td>
             <td><a href="#">{{ producto.categoria }}</a></td>
-            <td>${{producto.precio_act|floatformat:0|intcomma}}</td>
+            <td>${{producto.precio_act|floatformat:0}}</td>
             <td>
                 <div class="container">
                     <div class="row">
@@ -102,7 +102,8 @@
 
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-outline-dark">Añadir</button>
-                    <button type="button" class="btn btn-outline-dark" onclick="cerrarModal()">Cerrar</button>
+                    <a href="/producto" class="btn btn-outline-dark">Cerrara</a>
+                    
                 </div>
             </form>
         </div>
@@ -111,9 +112,9 @@
 
 <div class="modal-background" id="detallebackground" style="display: none;">
     <!-- Contenido del modal -->
-    <div class="modal" id="detalleProducto" style="max-height: 700px; overflow-y: auto;">
+    <div class="modal" id="detalleProducto" style="max-height: 600px; overflow-y: auto;">
         <div class="modal-header">
-            <h2 class="modal-title">{{ detalle.nombre }}</h2>
+            <h2 class="modal-title">Agregar Descuento</h2>
             <a href="{% url 'producto:inicio' %}">
                 <button type="button" class="close" onclick="cerrarModalDetalle()" aria-label="Cerrar">
                     <span aria-hidden="true">&times;</span>
@@ -126,30 +127,17 @@
                 <img src="{{ detalle.imagen.url }}" alt="{{ detalle.nombre }}" class="img-fluid"
                     style="max-width: 300px; max-height: 200px;"">
             </div>
+                <form method="POST" action="/producto/descuento/{{detalle.id}}" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form_producto|crispy }}
+          
 
-           
-            <h4>Precio: </h4>
-            {% if detalle.precio_desc %}
-    <p>
-        <span style=" text-decoration: line-through;">${{ detalle.precio_act|floatformat:0|intcomma }}</span>
-                <span> ${{ detalle.precio_desc|floatformat:0|intcomma }} <b>Precio Con Descuento</b></span>
-                </p>
-                {% else %}
-                <p>${{ detalle.precio_act|floatformat:0|intcomma }}</p>
-                {% endif %}
-                <h4>Cantidad: </h4>
-                <p>{{ detalle.stock }}</p>
-                <h4>Descripción: </h4>
-                <p>{{ detalle.descripcion }}</p>
-                {% for categoria in categorias %}
-                <a href=" #" class="btn btn-primary">{{ categoria }}</a>
-                {% endfor %}
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-outline-dark">Editar</button>
+                    <a href="/productos" class="btn btn-outline-dark">Cerrar</a>
+                </div>
+                </form>
 
-            </div>
-            <div class=" modal-footer">
-                <a href="{% url 'producto:inicio' %}">
-                    <button type="button" class="btn btn-outline-dark" onclick="cerrarModalDetalle()">Cerrar</button>
-                </a>
             </div>
         </div>
     </div>

@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from decimal import Decimal
 
 from .models import (Producto, ProductoSubcategoria, Subcategoria)
-from .forms import (ProductoForm, ProductoSubcategoriaForm, CategoriaForm)
+from .forms import (ProductoForm, ProductoSubcategoriaForm, CategoriaForm, DescuentoForm)
 
 @login_required(login_url='/login') 
 def inicio(request):
@@ -158,3 +158,27 @@ def editarProducto(request, id):
     }
 
     return render(request, 'productos_editar.html', context)
+
+@login_required(login_url='/login') 
+def addDescuentoProducto(request, id):
+    # Obtén el producto por ID
+    producto = get_object_or_404(Producto, id=id)
+    productos = Producto.objects.all()
+    if request.method == 'POST':
+        # Llena los formularios con los datos existentes del producto
+        form_subcategoria = DescuentoForm(request.POST, instance=producto)
+
+        if form_subcategoria.is_valid():
+                producto_subcategoria = form_subcategoria.save(commit=False)
+                producto_subcategoria.producto = producto
+                producto_subcategoria.save()  
+                return redirect('producto:inicio')
+
+    # Llena los formularios con los datos existentes del producto
+    context = {
+        'productos': productos,
+        'detalle': producto,
+        'form_producto' : DescuentoForm(instance=producto),
+    }
+
+    return render(request, 'productos_descuentos.html', context)

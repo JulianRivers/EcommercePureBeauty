@@ -53,10 +53,10 @@
             <td>{{ producto.nombre }}</td>
             <td>{{ producto.stock }}</td>
             <td>
-                <a href="#">
+                <a href="producto/descuento/{{producto.id}}">
                     <div class="container">
                         <div class="row">
-                            {{ producto.precio_desc }}✎
+                            $ {{ producto.precio_desc|floatformat:0|intcomma }}✎
                         </div>
                     </div>
                 </a>

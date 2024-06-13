@@ -11,6 +11,18 @@ class ProductoForm(forms.ModelForm):
         model = Producto
         fields = ['nombre', 'stock', 'descripcion', 'precio_act', 'imagen']
 
+class DescuentoForm(forms.ModelForm):
+    
+    class Meta:
+        model = Producto
+        fields = ['precio_desc', 'fecha_fin_desc']
+        labels = {
+            'precio_desc': 'Precio con Descuento',
+            'fecha_fin_desc': 'Fecha de Finalización del Descuento',
+        }
+        widgets = {
+            'fecha_fin_desc': forms.DateInput(attrs={'type': 'date'}),
+        }
 class CategoriaForm(forms.ModelForm):
     class Meta:
         model = Subcategoria
