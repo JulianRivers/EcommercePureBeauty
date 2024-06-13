@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from decimal import Decimal
 
 from .models import (Producto, ProductoSubcategoria, Subcategoria)
-from .forms import (ProductoForm, ProductoSubcategoriaForm, CategoriaForm, DescuentoForm)
+from .forms import (ProductoForm, ProductoSubcategoriaForm, CategoriaForm, DescuentoForm, ProductoEditForm)
 
 @login_required(login_url='/login') 
 def inicio(request):
@@ -77,6 +77,7 @@ def addProducto(request):
             # Procesa el campo tiene_iva para calcular el precio con IVA
             if form_producto.cleaned_data.get('tiene_iva'):
                 producto.precio_act = producto.precio_act * Decimal('1.19')
+                producto.precio_desc = 0
 
             producto.imagen = request.FILES['imagen']
             producto.save()
@@ -127,9 +128,10 @@ def editarProducto(request, id):
     # Obtén el producto por ID
     producto = get_object_or_404(Producto, id=id)
     productos = Producto.objects.all()
+
     if request.method == 'POST':
         # Llena los formularios con los datos existentes del producto
-        form_producto = ProductoForm(request.POST, request.FILES, instance=producto)
+        form_producto = ProductoEditForm(request.POST, request.FILES, instance=producto)
         form_subcategoria = ProductoSubcategoriaForm(request.POST)
 
         if form_producto.is_valid() and form_subcategoria.is_valid():
@@ -142,19 +144,24 @@ def editarProducto(request, id):
             producto.ult_actualizacion = timezone.now()
             producto.imagen = request.FILES.get('imagen', producto.imagen)  # Si no se proporciona nueva imagen, usa la existente
             producto.save()
+
             if 'subcategoria' in form_subcategoria.cleaned_data and form_subcategoria.cleaned_data['subcategoria'] is not None:
                 producto_subcategoria = form_subcategoria.save(commit=False)
                 producto_subcategoria.producto = producto
-                producto_subcategoria.save()  
+                producto_subcategoria.save()
 
             return redirect('producto:inicio')
+
+    else:
+        form_producto = ProductoEditForm(instance=producto)
+        form_subcategoria = ProductoSubcategoriaForm()
 
     # Llena los formularios con los datos existentes del producto
     context = {
         'productos': productos,
         'detalle': producto,
-        'form_producto' : ProductoForm(instance=producto),
-        'form_subcategoria' : ProductoSubcategoriaForm(),
+        'form_producto': form_producto,
+        'form_subcategoria': form_subcategoria,
     }
 
     return render(request, 'productos_editar.html', context)
