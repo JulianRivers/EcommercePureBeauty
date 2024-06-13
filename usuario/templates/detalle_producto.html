@@ -1,6 +1,7 @@
 {% extends 'general/inicio.html' %}
 {% load crispy_forms_tags %}
 {% load static %}
+{% load humanize %}
 
 {% block title %}
 Pure Beauty
@@ -39,7 +40,15 @@ Pure Beauty
             <i class="fas fa-heart fa-lg px-1" style="color: rgb(105, 105, 105);"></i>
           </a>
           {% endif %}
-          <p><strong>Precio:</strong> {{ producto.precio_act }}</p>
+          {% if producto.precio_desc %}
+            <p>
+              <span style=" text-decoration: line-through; color: red;">${{producto.precio_act|floatformat:0|intcomma }}</span>
+              <br>
+              <span>Precio: ${{ producto.precio_desc|floatformat:0|intcomma }} <b></b></span>
+            </p>
+            {% else %}
+            <p>Precio: ${{ producto.precio_act|floatformat:0|intcomma }}</p>
+            {% endif %}
           <form action="" method="post">
             {% csrf_token %}
             <div class="mb-3">

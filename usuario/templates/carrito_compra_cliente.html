@@ -1,5 +1,6 @@
 {% extends 'general/inicio.html' %}
 {% load static %}
+{% load humanize %}
 
 {% block title %}
 Carrito de Compra
@@ -18,15 +19,26 @@ Carrito de Compra
                         <li class="list-group-item">
                             <div class="row">
                                 <div class="col-md-3">
-                                    <img src="{{ item.producto.imagen.url }}" class="img-fluid" alt="{{ item.producto.nombre }}">
+                                    <img src="{{ item.producto.imagen.url }}" class="img-fluid"
+                                        alt="{{ item.producto.nombre }}">
                                 </div>
                                 <div class="col-md-6">
                                     <h5>{{ item.producto.nombre }}</h5>
                                     <p>Cantidad: {{ item.cantidad }}</p>
                                 </div>
                                 <div class="col-md-3 text-end">
-                                    <p>Precio: ${{ item.producto.precio_act }}</p>
-                                    <form method="post" action="{% url 'usuario:eliminar_producto_carrito' item.producto.id %}">
+                                    {% if item.producto.precio_desc %}
+                                    <p>
+                                        <span
+                                            style=" text-decoration: line-through; color: red;">${{item.producto.precio_act|floatformat:0|intcomma}}</span>
+                                        <br>
+                                        <span> ${{ item.producto.precio_desc|floatformat:0|intcomma }} <b></b></span>
+                                    </p>
+                                    {% else %}
+                                    <p>${{ item.producto.precio_act|floatformat:0|intcomma }}</p>
+                                    {% endif %}
+                                    <form method="post"
+                                        action="{% url 'usuario:eliminar_producto_carrito' item.producto.id %}">
                                         {% csrf_token %}
                                         <button type="submit" class="btn btn-danger btn-sm">
                                             <i class="fas fa-trash"></i>
@@ -45,7 +57,7 @@ Carrito de Compra
             <h2>Resumen</h2>
             <div class="card">
                 <div class="card-body">
-                    <p>Total a Pagar: ${{ total_pagar }}</p>
+                    <p>Total a Pagar: ${{ total_pagar|floatformat:0|intcomma  }}</p>
                     <form method="post" action="{% url 'usuario:pagar_carrito' %}">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-rosado">Pagar</button>

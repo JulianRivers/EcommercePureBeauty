@@ -1,6 +1,7 @@
 {% extends 'general/inicio.html' %}
 {% load crispy_forms_tags %}
 {% load static %}
+{% load humanize %}
 
 {% block title %}
 Pure Beauty
@@ -34,7 +35,15 @@ Pure Beauty
           </a>
           <div class="card-body d-flex flex-column">
             <h5 class="card-title">{{ product.nombre }}</h5>
-            <p class="card-text">{{ product.precio_act }}</p>
+            {% if product.precio_desc %}
+            <p>
+              <span style=" text-decoration: line-through; color: red;">${{product.precio_act|floatformat:0|intcomma }}</span>
+              <br>
+              <span> ${{ product.precio_desc|floatformat:0|intcomma }} <b></b></span>
+            </p>
+            {% else %}
+            <p>${{ product.precio_act|floatformat:0|intcomma }}</p>
+            {% endif %}
             {% if user.is_authenticated %}
             {% if product.is_lista %}
             <a href="/" class="btn btn-light border px-2 pt-2 icon-hover add-to-wishlist"

@@ -1,20 +1,23 @@
 {% extends 'general/inicio.html' %}
 {% load crispy_forms_tags %}
 {% load static %}
+{% load humanize %}
 
 {% block title %}
 Pure Beauty
 {% endblock title %}
 
 {% block style %}
-<script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
-<script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+<script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js"
+  integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
+<script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js"
+  integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
 <script src="https://kit.fontawesome.com/713036b1f5.js" crossorigin="anonymous"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="{% static 'js/animations.js' %}"></script>
 <script src="{% static 'js/ajaxRequest.js' %}"></script>
 {% endblock style %}
-  
+
 {% block content %}
 
 <!-- Products -->
@@ -25,36 +28,44 @@ Pure Beauty
     </header>
 
     <div class="row">
-        {% for product in productos %}
-        <div class="col-lg-3 col-md-6 col-sm-5 d-flex">
-            <div class="card w-100 my-2 shadow-2-strong">
-              <a href="{% url 'usuario:detalle_producto' product.id %}">
-                <img src="{{ product.imagen.url }}" class="card-img-top" style="aspect-ratio: 1 / 1" />
-              </a>
-              <div class="card-body d-flex flex-column">
-                <h5 class="card-title">{{ product.nombre }}</h5>
-                <p class="card-text">{{ product.precio_act }}</p>
-                {% if user.is_authenticated %}
-                {% if product.is_lista %}
-                <a href="/" class="btn btn-light border px-2 pt-2 icon-hover add-to-wishlist"
-                  data-product-id="{{ product.id }}">
-                  <i class="fas fa-heart fa-lg px-1" style="color: rgb(255, 0, 0);"></i>
-                </a>
-                {% else %}
-                <a href="/" class="btn btn-light border px-2 pt-2 icon-hover add-to-wishlist"
-                  data-product-id="{{ product.id }}">
-                  <i class="fas fa-heart fa-lg px-1" style="color: rgb(105, 105, 105);"></i>
-                </a>
-                {% endif %}
-                {% else %}
-                <a href="{% url 'usuario:login' %}" class="btn btn-light border px-2 pt-2 icon-hover">
-                  <i class="fas fa-heart fa-lg px-1" style="color: rgb(105, 105, 105);"></i>
-                </a>
-                {% endif %}
-              </div>
-            </div>
+      {% for product in productos %}
+      <div class="col-lg-3 col-md-6 col-sm-5 d-flex">
+        <div class="card w-100 my-2 shadow-2-strong">
+          <a href="{% url 'usuario:detalle_producto' product.id %}">
+            <img src="{{ product.imagen.url }}" class="card-img-top" style="aspect-ratio: 1 / 1" />
+          </a>
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">{{ product.nombre }}</h5>
+            {% if product.precio_desc %}
+            <p>
+              <span style=" text-decoration: line-through; color: red;">${{product.precio_act|floatformat:0|intcomma }}</span>
+              <br>
+              <span> ${{ product.precio_desc|floatformat:0|intcomma }} <b></b></span>
+            </p>
+            {% else %}
+            <p>${{ product.precio_act|floatformat:0|intcomma }}</p>
+            {% endif %}
+            {% if user.is_authenticated %}
+            {% if product.is_lista %}
+            <a href="/" class="btn btn-light border px-2 pt-2 icon-hover add-to-wishlist"
+              data-product-id="{{ product.id }}">
+              <i class="fas fa-heart fa-lg px-1" style="color: rgb(255, 0, 0);"></i>
+            </a>
+            {% else %}
+            <a href="/" class="btn btn-light border px-2 pt-2 icon-hover add-to-wishlist"
+              data-product-id="{{ product.id }}">
+              <i class="fas fa-heart fa-lg px-1" style="color: rgb(105, 105, 105);"></i>
+            </a>
+            {% endif %}
+            {% else %}
+            <a href="{% url 'usuario:login' %}" class="btn btn-light border px-2 pt-2 icon-hover">
+              <i class="fas fa-heart fa-lg px-1" style="color: rgb(105, 105, 105);"></i>
+            </a>
+            {% endif %}
           </div>
-        {% endfor %}
+        </div>
+      </div>
+      {% endfor %}
     </div>
   </div>
 </section>
@@ -66,7 +77,7 @@ Pure Beauty
     $('.add-to-wishlist').on('click', function (e) {
       e.preventDefault();
       var productId = $(this).data('product-id');
-  
+
       // Realizar una solicitud AJAX para agregar o quitar el producto de la lista de deseos
       $.ajax({
         type: 'GET',
