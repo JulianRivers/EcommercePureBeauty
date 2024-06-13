@@ -138,7 +138,7 @@ def editarProducto(request, id):
             # Guarda los cambios en el producto
             producto = form_producto.save(commit=False)
             producto.is_activo = True
-            producto.precio_desc = producto.precio_act
+            producto.precio_desc = producto.precio_desc
             producto.fecha_inicio_desc = timezone.now()
             producto.fecha_fin_desc = timezone.now()
             producto.ult_actualizacion = timezone.now()
