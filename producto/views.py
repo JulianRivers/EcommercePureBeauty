@@ -69,7 +69,7 @@ def addProducto(request):
         if form_producto.is_valid() and form_subcategoria.is_valid():
             producto = form_producto.save(commit=False)
             producto.is_activo = True
-            producto.precio_desc = producto.precio_act
+            producto.precio_desc = 0
             producto.fecha_inicio_desc = timezone.now()
             producto.fecha_fin_desc = timezone.now()
             producto.ult_actualizacion = timezone.now()
